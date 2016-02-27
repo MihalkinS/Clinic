@@ -53,6 +53,8 @@ namespace Clinic.Api.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
+
+
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
@@ -341,6 +343,7 @@ namespace Clinic.Api.Controllers
 
             return Ok();
         }
+
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
