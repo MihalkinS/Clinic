@@ -6,8 +6,14 @@ namespace Clinic.Api.Models
 {
     public class AppDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
-        //пароль администратора
-        private const string ADMINPASSWORD = "Qwerty6";
+
+        // Для заполнения информации об администраторе
+        private struct ADMIN
+        {
+            public const string USERNAME = "Admin";
+            public const string EMAIL = "admin@HealthyPet.com";
+            public const string PASSWORD = "Qwerty6";
+        }
 
         protected override void Seed(ApplicationDbContext context)
         {
@@ -18,7 +24,7 @@ namespace Clinic.Api.Models
             // Создаем 3 роли (
             // Администратор
             // Врач
-            // Зарегистрированный клиент
+            // Зарегистрированный клиент )
             var administratorRole = new IdentityRole("Administrator");
             var doctorRole = new IdentityRole("Doctor");
             var clientRole = new IdentityRole("Client");
@@ -31,12 +37,12 @@ namespace Clinic.Api.Models
             // Добавляем Админа (1 на весь проект)
             var administrator = new ApplicationUser()
             {
-                Email = "admin@HealthyPet.com",
-                UserName = "Admin"
+                Email = ADMIN.EMAIL,
+                UserName = ADMIN.USERNAME
             };
 
             
-            var result = userManager.Create(administrator, ADMINPASSWORD);
+            var result = userManager.Create(administrator, ADMIN.PASSWORD);
 
             // Если администратор добавлен, то добавляем ему роль Администратора
             if (result.Succeeded)
