@@ -66,6 +66,17 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\app.js" />
+    <Content Include="app\controllers\doctorCtrl.js" />
+    <Content Include="app\controllers\indexCtrl.js" />
+    <Content Include="app\controllers\mainCtrl.js" />
+    <Content Include="app\lib\angular-animate.min.js" />
+    <Content Include="app\lib\angular-route.min.js" />
+    <Content Include="app\lib\angular-sanitize.min.js" />
+    <Content Include="app\lib\angular.min.js" />
+    <Content Include="content\css\bootstrap.css" />
+    <Content Include="content\css\ClinicStyle.css" />
+    <Content Include="Index.html" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -75,10 +86,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="views\doctor.html" />
+    <Content Include="views\main.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="content\img\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

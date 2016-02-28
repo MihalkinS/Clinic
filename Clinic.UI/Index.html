@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html ng-app="clinicApp">
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="content/css/bootstrap.css" rel="stylesheet" />
+    <link href="content/css/ClinicStyle.css" rel="stylesheet" />
+</head>
+<body ng-controller="indexCtrl">
+    
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#/main">Healthy Pet</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="navbar-text" ng-show="SingIn">
+                        <span><b>{{user.name}}</b>({{user.level}})</span>
+                    </li>
+                    <li>
+                        <a href="" ng-hide="SingIn" ng-click="SignUp()">Регистрация</a>
+                    </li>
+                    <li>
+                        <a href="" ng-show="SingIn" ng-click="SignOut()">Выйти</a>
+                        <a href="" ng-hide="SingIn">Войти</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <ng-view></ng-view>
+    <script src="app/lib/angular.min.js"></script>
+    <script src="app/lib/angular-route.min.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/controllers/indexCtrl.js"></script>
+    <script src="app/controllers/mainCtrl.js"></script>
+    <script src="app/controllers/doctorCtrl.js"></script>
+</body>
+</html>
