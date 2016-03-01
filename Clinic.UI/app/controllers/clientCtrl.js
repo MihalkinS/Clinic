@@ -1,5 +1,4 @@
-﻿clinicApp.controller('doctorCtrl', function ($scope, $http) {
-
+﻿clinicApp.controller('clientCtrl', function ($scope) {
 
 
     $scope.currWeek = {
@@ -16,6 +15,35 @@
         ]
 
     };
+
+
+    $scope.doctor = {
+        avatar: '../content/img/avatars/Твердорукова.jpg',
+        name: 'Твердорукова Галина Александровна',
+        position: 'Главный специалист'
+    };
+
+    $scope.currDoctor = true;
+
+    $scope.otherDoctor = function () {
+        if ($scope.currDoctor === true) {
+            $scope.currDoctor = false;
+            $scope.doctor = {
+                avatar: '../content/img/avatars/Белохалатов.jpg',
+                name: 'Белохалатов Антон Иванович',
+                position: 'Главный ветеринар'
+            };
+        }
+        else {
+            $scope.currDoctor = true;
+            $scope.doctor = {
+                avatar: '../content/img/avatars/Твердорукова.jpg',
+                name: 'Твердорукова Галина Александровна',
+                position: 'Главный специалист'
+            };
+        };
+    }
+
 
     $scope.week = [
         'Понедельник',
@@ -59,7 +87,7 @@
         'free',
         'free',
         'busy',
-        'notConfirmed',
+        'free',
         'busy'
     ];
 
@@ -74,7 +102,7 @@
 
     $scope.wednesdayTime = [
         'busy',
-        'notConfirmed',
+        'free',
         'free',
         'busy',
         'free',
@@ -101,9 +129,9 @@
 
     $scope.saturdayTime = [
         'busy',
-        'notConfirmed',
-        'notConfirmed',
-        'notConfirmed',
+        'free',
+        'free',
+        'free',
         'free',
         'free'
     ];

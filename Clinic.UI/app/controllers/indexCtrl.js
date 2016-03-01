@@ -1,5 +1,7 @@
 ﻿clinicApp.controller('indexCtrl', function ($scope, $http) {
 
+
+
     $scope.SignIn = function () {
         alert('in!');
 

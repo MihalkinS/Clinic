@@ -4,7 +4,8 @@
     <title></title>
 	<meta charset="utf-8" />
     <link href="content/css/bootstrap.css" rel="stylesheet" />
-    <link href="content/css/ClinicStyle.css" rel="stylesheet" />
+
+    <link href="content/css/myStyle.css" rel="stylesheet" />
 </head>
 <body ng-controller="indexCtrl">
     
@@ -29,14 +30,14 @@
             </div>
         </div>
     </div>
-
     <ng-view></ng-view>
     <script src="app/lib/angular.min.js"></script>
     <script src="app/lib/angular-route.min.js"></script>
     <script src="app/app.js"></script>
+    <script src="app/controllers/clientCtrl.js"></script>
     <script src="app/controllers/indexCtrl.js"></script>
-    <script src="app/controllers/mainCtrl.js"></script>
+    <script src="app/controllers/adminCtrl.js"></script>
     <script src="app/controllers/doctorCtrl.js"></script>
-    <script src="app/controllers/registerCtrl.js"></script>
+    <script src="app/controllers/mainCtrl.js"></script>
 </body>
 </html>

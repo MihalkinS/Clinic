@@ -1,3 +1,6 @@
 ﻿.navCursor{
     cursor: pointer;
 }
+body {
+    background-image: url('../img/bg/body.jpg');
+}

@@ -1,0 +1,109 @@
+﻿.col-centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.col-onright {
+  display: block;
+  margin-right: 0;
+  text-align: right;
+}
+
+.col-onleft {
+  display: block;
+  margin-left: 0;
+  text-align: left;
+}
+
+.colore{
+    background-color:brown;
+}
+
+th {
+    max-width: 70px;
+    min-width: 70px;
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+.linkReservation:hover {
+    background-color: #DEE5EB;
+    padding: 3px;
+    border-radius: 1px;
+    cursor: pointer;
+}
+
+.linkConfirm:hover {
+    padding: 3px;
+    border-radius: 1px;
+    cursor: pointer;
+    background-color: #f69c55;
+    color: white;
+}
+
+.linkConfirm {
+
+    background-color: white;
+    color: #f69c55;
+    padding: 3px;
+    border-radius: 1px;
+}
+
+.textBusy {
+    background-color: white;
+    color: #e4b9b9;
+    padding: 3px;
+    border-radius: 1px;
+    cursor: default;
+}
+
+.textBusy:hover {
+    background-color: #e4b9b9;
+    color: white;
+    padding: 3px;
+    border-radius: 1px;
+    cursor: default;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+}
+
+.middleHeader {
+    padding-bottom: 9.5px;
+    font-size: 20px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.margin-top-17{
+    margin-top: 17px;
+}
+
+.margin-top-25px {
+    margin-top: 25px;
+}
+
+.timeColums {
+    width: 25px;
+}
+
+.calendarHeader {
+    width: 150px;
+    height: 60px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #dddddd;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.calendarHeader:hover {
+    background-color: #dddddd;
+}

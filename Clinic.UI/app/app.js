@@ -1,20 +1,50 @@
-﻿var clinicApp = angular.module('clinicApp', ["ngRoute"])
+﻿
+var clinicApp = angular.module('clinicApp', ["ngRoute"])
     .config(function ($routeProvider) {
 
-        $routeProvider.when('/doctor',
+        $routeProvider.when('/doctor/calendar/',
         {
-            templateUrl: 'doctor.html',
+            templateUrl: '/views/Doctor/calendar.html',
             controller: 'doctorCtrl'
         });
-        $routeProvider.when('/register',
+
+
+        $routeProvider.when('/client/register/',
         {
-            templateUrl: 'register.html',
-            controller: 'registerCtrl'
+            templateUrl: '/views/Client/register.html',
+            controller: 'clientCtrl'
         });
-        $routeProvider.when('/main',
+        $routeProvider.when('/client/calendar/',
         {
-            templateUrl: 'main.html',
-            controller: 'mainCtrl'
+            templateUrl: '/views/Client/calendar.html',
+            controller: 'clientCtrl'
         });
-        $routeProvider.otherwise({ redirectTo: '/main' });
+        $routeProvider.when('/client/comment/',
+        {
+            templateUrl: '/views/Client/comment.html',
+            controller: 'clientCtrl'
+        });
+
+        $routeProvider.when('/admin/add/',
+        {
+            templateUrl: '/views/Admin/add.html',
+            controller: 'adminCtrl'
+        });
+        $routeProvider.when('/admin/holidays/',
+        {
+            templateUrl: '/views/Admin/add.html',
+            controller: 'adminCtrl'
+        });
+        $routeProvider.when('/admin/procedures/',
+        {
+            templateUrl: '/views/Admin/procedures.html',
+            controller: 'adminCtrl'
+        });
+
+        $routeProvider.when('/404',
+        {
+            templateUrl: '/views/404.html'
+        });
+
+        $routeProvider.otherwise({ redirectTo: '/404' });
     });
