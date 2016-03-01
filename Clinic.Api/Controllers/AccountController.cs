@@ -17,6 +17,7 @@ using Microsoft.Owin.Security.OAuth;
 using Clinic.Api.Models;
 using Clinic.Api.Providers;
 using Clinic.Api.Results;
+using Clinic.Api.Models.Context;
 
 namespace Clinic.Api.Controllers
 {

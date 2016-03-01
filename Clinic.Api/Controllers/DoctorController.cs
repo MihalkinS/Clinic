@@ -8,6 +8,8 @@ using System.Web.Http;
 using Clinic.Api.Models;
 using System.Web.Http.Description;
 using System.Data.Entity.Infrastructure;
+using Clinic.Api.Models.AppModels;
+using Clinic.Api.Models.Context;
 
 namespace Clinic.Api.Controllers
 {
@@ -18,7 +20,7 @@ namespace Clinic.Api.Controllers
     public class DoctorController : ApiController
     {
 
-        private DoctorsContext db = new DoctorsContext();
+        private DBContext db = new DBContext();
 
         [Route("ListOfDoctors")]
         public IQueryable<Doctor> GetDoctors()

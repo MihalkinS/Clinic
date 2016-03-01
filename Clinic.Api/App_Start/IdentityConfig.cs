@@ -4,6 +4,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Clinic.Api.Models;
+using Clinic.Api.Models.Context;
+using Clinic.Api.Models.AppModels;
 
 namespace Clinic.Api
 {

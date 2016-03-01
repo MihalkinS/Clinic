@@ -2,7 +2,8 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 
-namespace Clinic.Api.Models
+
+namespace Clinic.Api.Models.Context
 {
     public class AppDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
@@ -49,6 +50,12 @@ namespace Clinic.Api.Models
             {
                 userManager.AddToRole(administrator.Id, administratorRole.Name);
             }
+
+            //
+            //      Устанавливаем ограничение для связи один-ко-многим
+            //      
+
+            //db.Database.ExecuteSqlCommand("ALTER TABLE dbo.Players ADD CONSTRAINT Players_Teams FOREIGN KEY (TeamId) REFERENCES dbo.Teams (Id) ON DELETE SET NULL");
 
 
             base.Seed(context);

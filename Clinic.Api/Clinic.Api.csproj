@@ -191,12 +191,18 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountBindingModels.cs" />
+    <Compile Include="Models\AppModels\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AppDbInitializer.cs" />
-    <Compile Include="Models\Doctor.cs" />
-    <Compile Include="Models\DoctorsContext.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Context\AppDbInitializer.cs" />
+    <Compile Include="Models\AppModels\Client.cs" />
+    <Compile Include="Models\AppModels\Comment.cs" />
+    <Compile Include="Models\AppModels\Day.cs" />
+    <Compile Include="Models\AppModels\Doctor.cs" />
+    <Compile Include="Models\DoctorTEMP.cs" />
+    <Compile Include="Models\Context\DBContext.cs" />
+    <Compile Include="Models\AppModels\Time.cs" />
+    <Compile Include="Models\AppModels\Visit.cs" />
+    <Compile Include="Models\Context\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

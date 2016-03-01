@@ -10,6 +10,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using Clinic.Api.Providers;
 using Clinic.Api.Models;
+using Clinic.Api.Models.Context;
 
 namespace Clinic.Api
 {

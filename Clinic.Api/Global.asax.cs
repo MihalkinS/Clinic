@@ -8,6 +8,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Clinic.Api.Models.AppModels;
+using Clinic.Api.Models.Context;
 
 namespace Clinic.Api
 {
