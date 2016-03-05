@@ -15,7 +15,7 @@ using System.Data.Entity;
 
 namespace Clinic.Api.Controllers
 {
-   // [Authorize(Roles ="Administrator")]
+    [Authorize(Roles ="Administrator")]
     [RoutePrefix("api/Doctor")]
     public class DoctorController : ApiController
     {
@@ -90,7 +90,7 @@ namespace Clinic.Api.Controllers
                 return BadRequest("Bad request data");
             }
 
-            // нету пользователя, к кторому нужно присоеденить профиль
+            // нету пользователя, к которому нужно присоеденить профиль
             if(db.Users.Find(model.Id) == null)
             {
                 return BadRequest("Doctor not found!");
@@ -154,15 +154,15 @@ namespace Clinic.Api.Controllers
         public IHttpActionResult Delete(string id)
         {
 
-            var DoctorProfile = db.Doctors.Find(id);
+            var doctorProfile = db.Doctors.Find(id);
 
-            if(DoctorProfile == null)
+            if(doctorProfile == null)
             {
                 return BadRequest("Profile not found!");
             }
             else
             {
-                db.Doctors.Remove(DoctorProfile);
+                db.Doctors.Remove(doctorProfile);
                 db.SaveChanges();
                 return Ok();
             }
