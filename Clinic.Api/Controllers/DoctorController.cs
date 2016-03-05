@@ -2,113 +2,170 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http.Cors;
 using System.Net.Http;
 using System.Web.Http;
-using Clinic.Api.Models;
-using System.Web.Http.Description;
-using System.Data.Entity.Infrastructure;
 using Clinic.Api.Models.AppModels;
 using Clinic.Api.Models.Context;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using System.Web.Helpers;
+using Clinic.Api.Models.ViewModels;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace Clinic.Api.Controllers
 {
-
-    [Authorize(Roles = "Administrator")]
+   // [Authorize(Roles ="Administrator")]
     [RoutePrefix("api/Doctor")]
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class DoctorController : ApiController
     {
+        ApplicationDbContext db = new ApplicationDbContext();
 
-        private DBContext db = new DBContext();
 
-        [Route("ListOfDoctors")]
-        public IQueryable<Doctor> GetDoctors()
+        // Получить всех докторов (профили)
+        // GET: api/Doctor
+        public IHttpActionResult Get()
         {
-            return db.Doctors;
-        }
 
-        [ResponseType(typeof(Doctor))]
-        public IHttpActionResult GetDoctor(int id)
-        {
-            Doctor doctor = db.Doctors.Find(id);
+            List<DoctorViewModel> listOfDoctors = new List<DoctorViewModel>();
 
-            if(doctor == null)
+            //var role = db.Roles.SingleOrDefault(m => m.Name == "Doctor");
+            //var usersInRole = db.Users.Where(m => m.Roles.Any(r => r.RoleId == role.Id));
+
+            var role = db.Roles.SingleOrDefault(m => m.Name == "Doctor");
+            var usersInRoleId = db.Users.Where(m => m.Roles.Any(r => r.RoleId == role.Id)).Select(x => x.Id).ToList();
+
+
+            if (usersInRoleId == null)
             {
-                return NotFound();
+                return BadRequest("Doctors do not exist!");
+            }
+            else
+            {
+                
+                foreach (var item in usersInRoleId)
+                {
+                    var doctor = db.Doctors.SingleOrDefault(d => d.UserId == item);
+                    if(doctor != null)
+                    {
+                        // так как doctor имеет кроме свойств еще и связи
+                        // мы отправляем DoctorViewModel массив (в ней есть только свойства id, name и т.д.)
+                        listOfDoctors.Add(new DoctorViewModel(doctor));
+                    }       
+                }
+
+                return Ok(listOfDoctors);
             }
 
-            return Ok(doctor);
+            
+        }
+        
+
+        // Получает информацию о докторе (профиль)
+        // GET: api/Doctor/5
+        public IHttpActionResult Get(string id)
+        {
+
+            var doctor = db.Doctors.Find(id);
+            if (doctor == null)
+            {
+                return BadRequest("Doctor not found!");
+            }
+            else
+            {
+                // так как doctor имеет кроме свойств еще и связи
+                // мы отправляем DoctorViewModel (в ней есть только свойства id, name и т.д.)
+                DoctorViewModel convertToSend = new DoctorViewModel(doctor);
+                return Ok(convertToSend);
+            }           
         }
 
-        [ResponseType(typeof(Doctor))]
-        public IHttpActionResult Post(Doctor doctor)
+        // добавляет дополнительную информацию о докторе (Профиль)
+        // POST: api/Doctor
+        public IHttpActionResult Post([FromBody]DoctorViewModel model)
         {
+
+            if(model == null)
+            {
+                return BadRequest("Bad request data");
+            }
+
+            // нету пользователя, к кторому нужно присоеденить профиль
+            if(db.Users.Find(model.Id) == null)
+            {
+                return BadRequest("Doctor not found!");
+            }
+
+            Doctor doctor = new Doctor()
+            {
+                Address = model.Address,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                MiddleName = model.MiddleName,
+                Position = model.Position,
+                WorkTimeStart = model.WorkTimeStart,
+                WorkTimeFinish = model.WorkTimeFinish,
+                UserId = model.Id,
+                AvatarURL = model.AvatarURL
+            };
+
             db.Doctors.Add(doctor);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultAPI", new { doctor.Id }, doctor);
+            return Ok();
         }
 
-        [ResponseType(typeof(void))]
-        public IHttpActionResult Put(int id, Doctor doctor)
+
+        // Редактирует информацию о докторе (Профиль)
+        // PUT: api/Doctor/5
+        public IHttpActionResult Put([FromBody]DoctorViewModel model)
         {
 
-            if(id != doctor.Id)
+            Doctor doctor = db.Doctors.First(r => r.UserId == model.Id);
+
+            // нету пользователя, к кторому нужно присоеденить профиль
+            if (doctor == null)
             {
-                return BadRequest();
+                return BadRequest("Doctor not found!");
             }
-
-            db.Entry(doctor).State = System.Data.Entity.EntityState.Modified;
-
-            try
+            else
             {
+                db.Doctors.Attach(doctor);
+
+                doctor.Address = model.Address;
+                doctor.FirstName = model.FirstName;
+                doctor.LastName = model.LastName;
+                doctor.MiddleName = model.MiddleName;
+                doctor.Position = model.Position;
+                doctor.WorkTimeStart = model.WorkTimeStart;
+                doctor.WorkTimeFinish = model.WorkTimeFinish;
+                doctor.AvatarURL = model.AvatarURL;
+
+                db.Entry(doctor).State = EntityState.Modified;
                 db.SaveChanges();
+
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DoctorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return StatusCode(HttpStatusCode.NoContent);
         }
+        
 
-        private bool DoctorExists(int id)
+        // Удаляет информацию о докторе (профиль)
+        // DELETE: api/Doctor/5
+        public IHttpActionResult Delete(string id)
         {
-            return db.Doctors.Count(e => e.Id == id) > 0;
-        }
 
+            var DoctorProfile = db.Doctors.Find(id);
 
-        [ResponseType(typeof(Doctor))]
-        public IHttpActionResult Delete(int id)
-        {
-            Doctor doctor = db.Doctors.Find(id);
-
-            if(doctor == null)
+            if(DoctorProfile == null)
             {
-                return NotFound();
+                return BadRequest("Profile not found!");
             }
-
-            db.Doctors.Remove(doctor);
-            db.SaveChanges();
-
-            return Ok(doctor);
-
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            else
             {
-                db.Dispose();
+                db.Doctors.Remove(DoctorProfile);
+                db.SaveChanges();
+                return Ok();
             }
-            base.Dispose(disposing);
         }
     }
 }

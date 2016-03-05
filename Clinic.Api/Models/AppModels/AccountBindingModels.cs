@@ -35,6 +35,10 @@ namespace Clinic.Api.Models
     public class RegisterBindingModel
     {
         [Required]
+        [Display(Name = "Name")]
+        public string UserName { get; set; }
+
+        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -48,6 +52,14 @@ namespace Clinic.Api.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; }
     }
 
     public class RegisterExternalBindingModel

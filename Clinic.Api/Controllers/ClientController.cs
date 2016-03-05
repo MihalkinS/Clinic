@@ -4,37 +4,40 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Cors;
+using Clinic.Api.Models;
+using Clinic.Api.Models.Context;
+using Clinic.Api.Models.AppModels;
 
 namespace Clinic.Api.Controllers
 {
-    [AllowAnonymous]
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class TestController : ApiController
+
+    public class ClientController : ApiController
     {
-        // GET: api/Test
+        ApplicationDbContext db = new ApplicationDbContext();
+
+        // GET: api/Client
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/Test/5
+        // GET: api/Client/5
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/Test
+        // POST: api/Client
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT: api/Test/5
+        // PUT: api/Client/5
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE: api/Test/5
+        // DELETE: api/Client/5
         public void Delete(int id)
         {
         }

@@ -3,12 +3,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Clinic.Api.Models.AppModels;
+using System.Data.Entity;
 
 namespace Clinic.Api.Models.Context
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+
+        public virtual Client Client { get; set; }
+        public virtual Doctor Doctor { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -21,13 +27,26 @@ namespace Clinic.Api.Models.Context
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("VetConnection", throwIfV1Schema: false)
         {
+          //  Database.Initialize(true);
         }
-        
+
+
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Visit> Visits { get; set; }
+
+        public DbSet<Day> Days { get; set; }
+        public DbSet<Time> Times { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+    //    public System.Data.Entity.DbSet<Clinic.Api.Models.Context.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

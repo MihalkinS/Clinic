@@ -45,7 +45,10 @@ namespace Clinic.Api.Providers
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+           IList<string> roleManager = await userManager.GetRolesAsync(user.Id);
+
+
+            AuthenticationProperties properties = CreateProperties(user.UserName, roleManager);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -57,6 +60,10 @@ namespace Clinic.Api.Providers
             {
                 context.AdditionalResponseParameters.Add(property.Key, property.Value);
             }
+
+
+
+            //context.AdditionalResponseParameters.Add("role", "admin");
 
             return Task.FromResult<object>(null);
         }
@@ -95,5 +102,21 @@ namespace Clinic.Api.Providers
             };
             return new AuthenticationProperties(data);
         }
+        ////////////////////////////////////////////////
+        //EDITED
+        /////////////////////////////////////////////////
+        public static AuthenticationProperties CreateProperties(string userName, IList<string> userRoles)
+        {
+            IDictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "userName", userName }
+            };
+            foreach (var role in userRoles)
+            {
+                data.Add("role", role);
+            };
+            return new AuthenticationProperties(data);
+        }
+
     }
 }

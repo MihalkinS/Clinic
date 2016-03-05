@@ -18,8 +18,10 @@ namespace Clinic.Api
         protected void Application_Start()
         {
 
-            Database.SetInitializer<ApplicationDbContext>(new AppDbInitializer());
-    
+            Database.SetInitializer<ApplicationDbContext>(new AuthDbInitializer());
+          //  Database.SetInitializer<MainDBContext>(new MainDBInitializer());
+            
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
