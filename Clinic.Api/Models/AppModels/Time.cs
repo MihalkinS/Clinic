@@ -12,7 +12,10 @@ namespace Clinic.Api.Models.AppModels
         public int Id { get; set; }
         public TimeSpan HourAndMinutes { get; set; }
 
-        public int? DayId { get; set; }
+        public int? VisitId { get; set; }
+        public Visit Visit { get; set; }
+
+        public int DayId { get; set; }
         public Day Day { get; set; }
     }
 }

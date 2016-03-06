@@ -13,7 +13,8 @@ namespace Clinic.Api.Models.AppModels
 
         public string Description { get; set; }
         public string Procedure { get; set; }
-        public bool State { get; set; }
+
+        //public bool State { get; set; }
         public bool Сonfirmation { get; set; }
 
         public ICollection<Time> Times { get; set; }

@@ -68,21 +68,30 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\controllers\adminCtrl.js" />
-    <Content Include="app\controllers\barCtrl.js" />
+    <Content Include="app\controllers\clientCtrl.js" />
     <Content Include="app\controllers\doctorCtrl.js" />
-    <Content Include="app\controllers\fooCtrl.js" />
     <Content Include="app\controllers\indexCtrl.js" />
-    <Content Include="app\controllers\mainCtrl.js" />
-    <Content Include="app\controllers\registerCtrl.js" />
+    <Content Include="app\controllers\signinCtrl.js" />
+    <Content Include="app\controllers\signupCtrl.js" />
     <Content Include="app\lib\angular-animate.min.js" />
+    <Content Include="app\lib\angular-local-storage.min.js" />
     <Content Include="app\lib\angular-route.min.js" />
     <Content Include="app\lib\angular-sanitize.min.js" />
     <Content Include="app\lib\angular.min.js" />
+    <Content Include="app\lib\loading-bar.js" />
+    <Content Include="app\services\authService.js" />
     <Content Include="content\css\bootstrap.css" />
     <Content Include="content\css\ClinicStyle.css" />
+    <Content Include="content\css\myStyle.css" />
+    <Content Include="content\img\avatars\Белохалатов.jpg" />
+    <Content Include="content\img\avatars\Твердорукова.jpg" />
     <Content Include="content\img\bg\body.jpg" />
     <Content Include="Index.html" />
     <Content Include="packages.config" />
+    <Content Include="scripts\angular-mocks.js" />
+    <Content Include="scripts\angular.js" />
+    <Content Include="scripts\angular.min.js" />
+    <Content Include="scripts\angular.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -91,19 +100,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="views\Doctor\doctor.html" />
+    <None Include="scripts\_references.js" />
+    <Content Include="views\404.html" />
+    <Content Include="views\Admin\add.html" />
+    <Content Include="views\Admin\holidays.html" />
+    <Content Include="views\Admin\procedures.html" />
+    <Content Include="views\Anonym\calendar.html" />
+    <Content Include="views\Client\comment.html" />
+    <Content Include="views\signup.html" />
+    <Content Include="views\Doctor\calendar.html" />
+    <Content Include="views\Client\calendar.html" />
+    <Content Include="views\signin.html" />
     <Content Include="views\main.html" />
-    <Content Include="views\Client\register.html" />
-    <Content Include="views\TESTVIEWS\bar.html" />
-    <Content Include="views\TESTVIEWS\foo.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="content\img\avatars\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

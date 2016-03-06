@@ -29,7 +29,7 @@ namespace Clinic.Api.Models.Context
         public ApplicationDbContext()
             : base("VetConnection", throwIfV1Schema: false)
         {
-          //  Database.Initialize(true);
+            Database.Initialize(true);
         }
 
 
