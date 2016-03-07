@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using Clinic.Api.Models.Context;
 
 namespace Clinic.Api.Models.AppModels
 {
@@ -13,8 +14,8 @@ namespace Clinic.Api.Models.AppModels
         public string Text { get; set; }
         public DateTime Data { get; set; }
 
-        public int? DoctorId { get; set; }
-        public Doctor Doctor { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
     }
 }

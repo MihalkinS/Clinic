@@ -12,14 +12,16 @@ using System.Data.Entity;
 
 namespace Clinic.Api.Controllers
 {
-    //[Authorize(Roles = "Administrator")]
+    
     [RoutePrefix("api/Client")]
     public class ClientController : ApiController
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
+
         // Получить всех клиентов (профили)
         // GET: api/Client
+        [Authorize(Roles = "Administrator")]
         public IHttpActionResult Get()
         {
 
@@ -53,8 +55,10 @@ namespace Clinic.Api.Controllers
 
         }
 
+
         // Получает информацию о клиенте (профиль)
         // GET: api/Client/5
+        [Authorize(Roles = "Administrator, Client, Doctor")]
         public IHttpActionResult Get(string id)
         {
 
@@ -72,8 +76,10 @@ namespace Clinic.Api.Controllers
             }
         }
 
+
         // добавляет дополнительную информацию о клиенте (Профиль)
         // POST: api/Client
+        [Authorize(Roles = "Client")]
         public IHttpActionResult Post([FromBody]ClientViewModel model)
         {
 
@@ -107,8 +113,10 @@ namespace Clinic.Api.Controllers
             return Ok();
         }
 
+
         // Редактирует информацию о клиенте (Профиль)
         // PUT: api/Client/5
+        [Authorize(Roles = "Client")]
         public IHttpActionResult Put([FromBody]ClientViewModel model)
         {
 
@@ -140,8 +148,10 @@ namespace Clinic.Api.Controllers
             }
         }
 
+
         // Удаляет информацию о клиенте (профиль)
         // DELETE: api/Client/5
+        [Authorize(Roles = "Client")]
         public IHttpActionResult Delete(string id)
         {
 

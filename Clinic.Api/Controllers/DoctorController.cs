@@ -15,7 +15,6 @@ using System.Data.Entity;
 
 namespace Clinic.Api.Controllers
 {
-    [Authorize(Roles ="Administrator")]
     [RoutePrefix("api/Doctor")]
     public class DoctorController : ApiController
     {
@@ -24,6 +23,7 @@ namespace Clinic.Api.Controllers
 
         // Получить всех докторов (профили)
         // GET: api/Doctor
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
 
@@ -59,10 +59,11 @@ namespace Clinic.Api.Controllers
 
             
         }
-        
+
 
         // Получает информацию о докторе (профиль)
         // GET: api/Doctor/5
+        [AllowAnonymous]
         public IHttpActionResult Get(string id)
         {
 
@@ -80,8 +81,11 @@ namespace Clinic.Api.Controllers
             }           
         }
 
+
+
         // добавляет дополнительную информацию о докторе (Профиль)
         // POST: api/Doctor
+        [Authorize(Roles = "Administrator")]
         public IHttpActionResult Post([FromBody]DoctorViewModel model)
         {
 
@@ -116,8 +120,10 @@ namespace Clinic.Api.Controllers
         }
 
 
+
         // Редактирует информацию о докторе (Профиль)
         // PUT: api/Doctor/5
+        [Authorize(Roles = "Administrator")]
         public IHttpActionResult Put([FromBody]DoctorViewModel model)
         {
 
@@ -147,10 +153,12 @@ namespace Clinic.Api.Controllers
                 return Ok();
             }
         }
-        
+
+
 
         // Удаляет информацию о докторе (профиль)
         // DELETE: api/Doctor/5
+        [Authorize(Roles = "Administrator")]
         public IHttpActionResult Delete(string id)
         {
 

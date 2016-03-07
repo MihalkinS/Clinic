@@ -14,12 +14,12 @@ namespace Clinic.Api.Models.AppModels
         public string WorkTimeFinish { get; set; }
 
         public ICollection<Visit> Visits { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+       // public ICollection<Comment> Comments { get; set; }
 
         public Doctor()
         {
             Visits = new List<Visit>();
-            Comments = new List<Comment>();
+          //  Comments = new List<Comment>();
         }
 
 

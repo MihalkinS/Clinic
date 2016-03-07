@@ -9,12 +9,14 @@ using System.Web.Http;
 
 namespace Clinic.Api.Controllers
 {
-    //[Authorize(Roles ="Administrator")]
+
+    [Authorize(Roles ="Administrator")]
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
 
         ApplicationDbContext db = new ApplicationDbContext();
+
 
         // Получает информацию о всех пользователях (Id, UserName, Email)
         // GET: api/User
@@ -36,6 +38,7 @@ namespace Clinic.Api.Controllers
             }
             return listOfUsers;
         }
+
 
         // Получает информацию о всех пользователях 
         // входящих в роль (Id, UserName, Email)
@@ -65,6 +68,7 @@ namespace Clinic.Api.Controllers
             return listOfUsers;
         }
 
+
         // Получить информацию о конкретном пользоватиле по ID 
         // (только email и username)
         // GET: api/User/5
@@ -86,6 +90,7 @@ namespace Clinic.Api.Controllers
                 return Ok(result);
             }
         }
+
 
         // Удаляет пользователя вместе с его профилем
         // DELETE: api/User/5

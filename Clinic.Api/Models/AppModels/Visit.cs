@@ -18,7 +18,6 @@ namespace Clinic.Api.Models.AppModels
         public bool Сonfirmation { get; set; }
 
         public ICollection<Time> Times { get; set; }
-
         public Visit()
         {
             Times = new List<Time>();

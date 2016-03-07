@@ -18,7 +18,7 @@ namespace Clinic.Api.Models.Context
             SetAdministrator(context);
 
             // Заполняем несколько недель(начиная с текущей) пустыми значениями по времени
-            SetAnyWeek(context);
+        //    SetAnyWeek(context);
 
             base.Seed(context);
         }

@@ -54,41 +54,41 @@ namespace Clinic.Api.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-/*
-           
-        [Authorize(Roles ="Client")]
-        [Route("client")]
-        public string Test()
-        {
+        /*
 
-            var id = User.Identity.GetUserId();
-
-            using (var context = new ApplicationDbContext())
-            {
-                context.Clients.Add(new Models.AppModels.Client()
+                [Authorize(Roles ="Client")]
+                [Route("client")]
+                public string Test()
                 {
-                    UserId = id,
-                    Address = "Florida",
-                    FirstName = "Kutrapali",
-                    LastName = "Ramsesh",
-                    MiddleName = "Bang"
-                });
-                context.SaveChanges();
-            }
 
-                return "testClient success";
-        }
+                    var id = User.Identity.GetUserId();
 
-        [Authorize(Roles = "Administrator")]
-        [Route("administrator")]
-        public string TestAdmin()
-        {
-            return "testAdministrator success";
-        }
-*/
+                    using (var context = new ApplicationDbContext())
+                    {
+                        context.Clients.Add(new Models.AppModels.Client()
+                        {
+                            UserId = id,
+                            Address = "Florida",
+                            FirstName = "Kutrapali",
+                            LastName = "Ramsesh",
+                            MiddleName = "Bang"
+                        });
+                        context.SaveChanges();
+                    }
 
-    
+                        return "testClient success";
+                }
 
+                [Authorize(Roles = "Administrator")]
+                [Route("administrator")]
+                public string TestAdmin()
+                {
+                    return "testAdministrator success";
+                }
+        */
+
+
+        
 
         // Регистрация. В модель передается:
         // UserName, Email, Password, Comfirm Password, PhoneAddress, Role
@@ -118,11 +118,31 @@ namespace Clinic.Api.Controllers
             }
             if (model.Role.CompareTo("Doctor") == 0)
             {
-                result = await UserManager.CreateAsync(user, model.Password);
-                await UserManager.AddToRoleAsync(user.Id, "Doctor");
-                if (!result.Succeeded)
+                // получаем ID пользователя, который обратился за добавлением врача
+                var userId = User.Identity.GetUserId();
+
+                if(userId == null)
                 {
-                    return GetErrorResult(result);
+                    return BadRequest("Your ID not found!");
+                }
+
+                // входит ли пользователь в роль администратора
+                var isAdmin = UserManager.IsInRoleAsync(userId, "Administrator");
+
+                // если доктора пытается добавить НЕ админ -> ошибка
+                if(isAdmin == null)
+                {
+                    return BadRequest("You are not an Administrator!");
+                }
+                // иначе пытаемся добавить доктора в БД
+                else
+                {
+                    result = await UserManager.CreateAsync(user, model.Password);
+                    await UserManager.AddToRoleAsync(user.Id, "Doctor");
+                    if (!result.Succeeded)
+                    {
+                        return GetErrorResult(result);
+                    }
                 }
             }
 
