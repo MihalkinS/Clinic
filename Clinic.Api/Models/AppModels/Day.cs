@@ -15,7 +15,7 @@ namespace Clinic.Api.Models.AppModels
 
        // [Index("DateIndex", IsUnique = true)]
         public DateTime Date { get; set; }
-
+        public string DayOfWeek { get; set; }
 
         public ICollection<Time> Times { get; set; }
         public Day()

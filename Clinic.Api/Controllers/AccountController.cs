@@ -18,6 +18,7 @@ using Clinic.Api.Models;
 using Clinic.Api.Providers;
 using Clinic.Api.Results;
 using Clinic.Api.Models.Context;
+using Clinic.Api.Models.AppModels;
 
 namespace Clinic.Api.Controllers
 {
@@ -139,6 +140,10 @@ namespace Clinic.Api.Controllers
                 {
                     result = await UserManager.CreateAsync(user, model.Password);
                     await UserManager.AddToRoleAsync(user.Id, "Doctor");
+
+                    // должны заполнить визиты для доктора нулевыми значениями и связать их с датой и временем
+                    FillVisits(user.Id);
+
                     if (!result.Succeeded)
                     {
                         return GetErrorResult(result);
@@ -148,6 +153,44 @@ namespace Clinic.Api.Controllers
 
 
             return Ok();
+        }
+
+        // Заполняем нулевыми значениями визиты на все время для нового доктора
+        private void FillVisits(string doctorId)
+        {
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+
+                //ищем доктора по ID
+                var user = db.Users.Find(doctorId);
+
+                // получаем все интервалы времени, которые существуют
+                var times = db.Times;
+                List<Time> timesList = new List<Time>();
+                foreach (var time in times)
+                {
+                    timesList.Add(time);
+                }
+
+                // каждый интервал времени связвываем с новым пустым визитом
+                foreach (var timeInterval in timesList)
+                {
+                    Visit visit = new Visit()
+                    {
+                        Procedure = "empty",
+                        Description = "emptyDescription",
+                        Сonfirmation = false
+                    };
+
+                    visit.Users.Add(user);
+                    visit.Times.Add(timeInterval);
+
+                    db.Visits.Add(visit);
+                    db.SaveChanges();
+                }
+            }
+
         }
 
 

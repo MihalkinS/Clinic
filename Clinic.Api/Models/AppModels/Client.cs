@@ -8,6 +8,7 @@ namespace Clinic.Api.Models.AppModels
 {
     public class Client : UserInfo
     {
+        
         public string PetName { get; set; }
         public string Breed { get; set; }
         public string Color { get; set; }

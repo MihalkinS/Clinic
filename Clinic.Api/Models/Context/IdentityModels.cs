@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Clinic.Api.Models.AppModels;
 using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace Clinic.Api.Models.Context
 {
@@ -14,6 +15,18 @@ namespace Clinic.Api.Models.Context
 
         public virtual Client Client { get; set; }
         public virtual Doctor Doctor { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Visit> Visits { get; set; }
+
+        public ApplicationUser() : base()
+        {
+            Comments = new List<Comment>();
+            Visits = new List<Visit>();
+        }
+
+
+
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
@@ -29,7 +42,7 @@ namespace Clinic.Api.Models.Context
         public ApplicationDbContext()
             : base("VetConnection", throwIfV1Schema: false)
         {
-            Database.Initialize(true);
+            //Database.Initialize(true);
         }
 
 

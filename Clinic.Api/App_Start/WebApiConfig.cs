@@ -17,6 +17,9 @@ namespace Clinic.Api
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
+            var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling =
+            Newtonsoft.Json.PreserveReferencesHandling.Objects;
 
             // ответ будет приходить в формате JSON
             config.Formatters.Remove(config.Formatters.XmlFormatter);

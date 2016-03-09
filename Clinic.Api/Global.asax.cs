@@ -18,9 +18,12 @@ namespace Clinic.Api
         protected void Application_Start()
         {
 
-            Database.SetInitializer<ApplicationDbContext>(new AuthDbInitializer());
-          //  Database.SetInitializer<MainDBContext>(new MainDBInitializer());
-            
+            Database.SetInitializer<ApplicationDbContext>(new DbInitializer());
+
+            // необходимо обращение к контексту для начальной инициализации
+            ApplicationDbContext db = new ApplicationDbContext();
+            db.Database.Initialize(true);
+
 
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
