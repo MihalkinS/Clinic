@@ -142,6 +142,10 @@ namespace Clinic.Api.Controllers
                 else
                 {
                     user.IsDoctor = true;
+
+                    // подтверждение аккаунта для доктора
+                    user.Confirmation = true;
+
                     result = await UserManager.CreateAsync(user, model.Password);
                     await UserManager.AddToRoleAsync(user.Id, "Doctor");
 

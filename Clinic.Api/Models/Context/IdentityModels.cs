@@ -20,6 +20,9 @@ namespace Clinic.Api.Models.Context
         public bool IsDoctor { get; set; }
         public bool IsClient { get; set; }
 
+        // подтверждение аккаунта для клиентов. потверждение делает доктор
+        public bool Confirmation { get; set; }
+
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Visit> Visits { get; set; }
 
@@ -29,6 +32,7 @@ namespace Clinic.Api.Models.Context
             Visits = new List<Visit>();
             IsClient = false;
             IsDoctor = false;
+            Confirmation = false;
         }
 
 
