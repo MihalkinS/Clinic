@@ -16,6 +16,10 @@ namespace Clinic.Api.Models.Context
         public virtual Client Client { get; set; }
         public virtual Doctor Doctor { get; set; }
 
+        // для более быстрого поиска клиента и доктора
+        public bool IsDoctor { get; set; }
+        public bool IsClient { get; set; }
+
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Visit> Visits { get; set; }
 
@@ -23,6 +27,8 @@ namespace Clinic.Api.Models.Context
         {
             Comments = new List<Comment>();
             Visits = new List<Visit>();
+            IsClient = false;
+            IsDoctor = false;
         }
 
 
@@ -54,6 +60,12 @@ namespace Clinic.Api.Models.Context
         public DbSet<Time> Times { get; set; }
 
         public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<Drug> Drugs { get; set; }
+        public DbSet<DrugStorage> DrugStorage { get; set; }
+
+        public DbSet<Procedure> Procedures { get; set; }
+
 
         public static ApplicationDbContext Create()
         {

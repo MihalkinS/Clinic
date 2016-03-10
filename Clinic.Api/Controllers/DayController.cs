@@ -14,6 +14,7 @@ namespace Clinic.Api.Controllers
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
+        /*
         // GET: api/Day/5
         public IHttpActionResult Get(int id)
         {
@@ -23,6 +24,7 @@ namespace Clinic.Api.Controllers
 
             return Ok(item2);
         }
+        */
 
         // Получаем предыдущих 7 дней, начиная со предыдущего от присланного
         // GET: api/Day/PrevWeek?doctorId=1f6f999b-72fa-45a4-8f84-48c&lastDayId=107
@@ -68,6 +70,7 @@ namespace Clinic.Api.Controllers
 
         }
 
+
         // Получаем 7 дней начиная от текущего
         // GET: api/Day/CurrWeek
         [AllowAnonymous]
@@ -101,6 +104,7 @@ namespace Clinic.Api.Controllers
             }
             
         }
+
 
         // Получаем следующих 7 дней, начиная со следующего от присланного
         // GET: api/Day/NextWeek?doctorId=1f6f999b-72fa-45a4-8f84-48c&lastDayId=107
@@ -185,7 +189,7 @@ namespace Clinic.Api.Controllers
                         id = vis.Id,
                         description = vis.Description,
                         confirmation = vis.Сonfirmation,
-                        procedure = vis.Procedure
+                        procedureId = vis.Procedure.Id
                     })
                 });
 

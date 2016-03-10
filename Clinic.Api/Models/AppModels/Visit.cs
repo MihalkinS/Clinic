@@ -13,18 +13,24 @@ namespace Clinic.Api.Models.AppModels
         public int Id { get; set; }
 
         public string Description { get; set; }
-        public string Procedure { get; set; }
-
-        //public bool State { get; set; }
         public bool Сonfirmation { get; set; }
+
+        public int? ProcedureId { get; set; }
+        public Procedure Procedure { get; set; }
 
         public ICollection<Time> Times { get; set; }
         public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<Drug> Drugs { get; set; }
         public Visit()
         {
             Times = new List<Time>();
             Users = new List<ApplicationUser>();
+            Drugs = new List<Drug>();
         }
+
+
+        //public string Procedure { get; set; }
+        //public bool State { get; set; }
 
         //public int? DoctorId { get; set; }
         //public Doctor Doctor { get; set; }

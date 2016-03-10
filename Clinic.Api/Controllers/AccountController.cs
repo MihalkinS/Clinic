@@ -108,8 +108,10 @@ namespace Clinic.Api.Controllers
 
             IdentityResult result;
 
+            // если мы добавляем клиента
             if (model.Role.CompareTo("Client") == 0)
             {
+                user.IsClient = true;
                 result = await UserManager.CreateAsync(user, model.Password);
                 await UserManager.AddToRoleAsync(user.Id, "Client");
                 if (!result.Succeeded)
@@ -117,6 +119,7 @@ namespace Clinic.Api.Controllers
                     return GetErrorResult(result);
                 }
             }
+            // если мы добавляем доктора
             if (model.Role.CompareTo("Doctor") == 0)
             {
                 // получаем ID пользователя, который обратился за добавлением врача
@@ -138,6 +141,7 @@ namespace Clinic.Api.Controllers
                 // иначе пытаемся добавить доктора в БД
                 else
                 {
+                    user.IsDoctor = true;
                     result = await UserManager.CreateAsync(user, model.Password);
                     await UserManager.AddToRoleAsync(user.Id, "Doctor");
 
@@ -178,7 +182,6 @@ namespace Clinic.Api.Controllers
                 {
                     Visit visit = new Visit()
                     {
-                        Procedure = "empty",
                         Description = "emptyDescription",
                         Сonfirmation = false
                     };

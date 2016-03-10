@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using Clinic.Api.Models.AppModels;
 using System;
+using System.Collections.Generic;
 
 namespace Clinic.Api.Models.Context
 {
@@ -20,7 +21,28 @@ namespace Clinic.Api.Models.Context
             // Заполняем несколько недель(начиная с текущей) пустыми значениями по времени
             SetAnyWeek(context);
 
+            TestHistory(context);
+
             base.Seed(context);
+        }
+
+        private void TestHistory(ApplicationDbContext context)
+        {
+            Drug drug1 = new Drug() { DrugName = "Conabis", Description = "Very strong drug!", Cost = 100 };
+            Drug drug2 = new Drug() { DrugName = "Conabis2", Description = "Very strong drug!2", Cost = 200 };
+
+            context.Drugs.AddRange(new List<Drug> { drug1, drug2 });
+            context.SaveChanges();
+
+            DrugStorage storage1 = new DrugStorage() { Drug = drug1, Count = 777 };
+            DrugStorage storage2 = new DrugStorage() { Drug = drug2, Count = 101 };
+
+            context.DrugStorage.AddRange(new List<DrugStorage> { storage1, storage2 });
+            context.SaveChanges();
+
+
+
+
         }
 
         // Для заполнения информации о ролях
