@@ -21,9 +21,9 @@ namespace Clinic.Api.Models.Context
             // Заполняем несколько недель(начиная с текущей) пустыми значениями по времени
        //     SetAnyWeek(context);
 
-         //   TestHistory(context);
+            TestHistory(context);
 
-            TestDoctors(context);
+        //    TestDoctors(context);
 
             base.Seed(context);
         }

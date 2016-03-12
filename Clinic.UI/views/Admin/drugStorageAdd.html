@@ -1,0 +1,44 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Добавить препарат на склад</h1>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <form class="form-horizontal" name="drugForm">
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-2 col-lg-offset-3">
+                            <button type="submit" ng-click="saveDrugInStore(drug, drugForm)" class="btn btn-success">Сохранить</button>
+                        </div>
+                        <div class="col-lg-5 col-lg-offset-2">
+                            <button type="reset" ng-click="redirectToDrugList()" class="btn btn-default">К списку препаратов</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="col-lg-2 control-label">Название</label>
+                        <div class="col-lg-10">
+                            <input value="{{drug.DrugName}}" type="text" class="form-control" id="name" disabled="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-lg-2 control-label">Описание</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" rows="3" id="description" disabled="">{{drug.Description}}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="count" class="col-lg-2 control-label">Количество</label>
+                        <div class="col-lg-10">
+                            <input ng-model="drug.count" type="number" class="form-control" id="count" autofocus required>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+

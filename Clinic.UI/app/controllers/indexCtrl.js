@@ -1,14 +1,12 @@
-﻿clinicApp.controller('indexCtrl', function ($scope, $http) {
+﻿'use strict';
+clinicApp.controller('indexCtrl', ['$scope', '$location', 'authService', 'adminService', 'anonymService', function ($scope, $location, authService, adminService, anonymService) {
 
-
-
-    $scope.SignIn = function () {
-        alert('in!');
-
-    };
-
-    $scope.SignUp = function () {
-        alert('up!');
+    $scope.SignOut = function () {
+        authService.logOut();
+        $location.path('/');
     }
 
-});
+    $scope.authentication = authService.authentication;
+
+
+}]);

@@ -4,40 +4,76 @@
     <title></title>
 	<meta charset="utf-8" />
     <link href="content/css/bootstrap.css" rel="stylesheet" />
-
     <link href="content/css/myStyle.css" rel="stylesheet" />
 </head>
 <body ng-controller="indexCtrl">
-    
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#/main">Healthy Pet</a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="navbar-text navCursor" ng-show="SingIn">
-                        <span><b>{{user.name}}</b>({{user.level}})</span>
-                    </li>
-                    <li>
-                        <a class="navCursor" ng-hide="SingIn" ng-click="SignUp()">Регистрация</a>
-                    </li>
-                    <li>
-                        <a class="navCursor" ng-show="SingOut" ng-click="SignOut()">Выйти</a>
-                        <a class="navCursor" ng-hide="SingIn" ng-click="SignIn()">Войти</a>
-                    </li>
-                </ul>
+
+        <div class="navbar navbar-inverse">
+            <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#/">Healthy Pet</a>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li ng-hide="authentication.isAuth"><a href="#/anonym/calendar/">Расписание</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/doctors/">Список докторов</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/holidays/">Время работы докторов</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/procedures/">Типовые процедуры</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/drugs/">Препараты</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client' && authentication.confirm"><a href="#/client/calendar/">Прием</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client' && !authentication.confirm"><a href="#/anonym/calendar/">Расписание</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client' && authentication.confirm"><a href="#/client/comment/">Оставить отзыв</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/calendar/">Расписание</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/history/">Картотека</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="navbar-text navCursor" ng-show="authentication.isAuth && authentication.userRole == 'Administrator'">
+                                <span>
+                                    <b>{{authentication.userName}}</b>
+                                    (Администратор)
+                                </span>
+                            </li>
+                            <li class="navbar-text navCursor" ng-show="authentication.isAuth && authentication.userRole == 'Doctor'">
+                                <span>
+                                    <b>{{authentication.userName}}</b>
+                                    (Доктор)
+                                </span>
+                            </li>
+                            <li class="navbar-text navCursor" ng-show="authentication.isAuth && authentication.userRole == 'Client'">
+                                <span>
+                                    <b>{{authentication.userName}}</b>
+                                    (Любимый клиент)
+                                </span>
+                            </li>
+                            <li class="navCursor"><a href="#/signup" ng-hide="authentication.isAuth" ng-click="SignUp()">Регистрация</a></li>
+                            <li class="navCursor"><a href="#/signin" ng-hide="authentication.isAuth" ng-click="SignIn()">Войти</a></li>
+                            <li class="navCursor"><a href="" ng-show="authentication.isAuth" ng-click="SignOut()">Выйти</a></li>
+                        </ul>
+                    </div>
             </div>
         </div>
-    </div>
-    <ng-view></ng-view>
+
+        <ng-view></ng-view>
+    
+
+
+
     <script src="app/lib/angular.min.js"></script>
+    <script src="app/lib/angular-animate.min.js"></script>
     <script src="app/lib/angular-route.min.js"></script>
+    <script src="app/lib/angular-local-storage.min.js"></script>
+    <script src="app/lib/loading-bar.js"></script>
     <script src="app/app.js"></script>
-    <script src="app/controllers/clientCtrl.js"></script>
     <script src="app/controllers/indexCtrl.js"></script>
+    <script src="app/services/authService.js"></script>
+    <script src="app/services/adminService.js"></script>
+    <script src="app/services/anonymService.js"></script>
+    <script src="app/controllers/signinCtrl.js"></script>
+    <script src="app/controllers/signupCtrl.js"></script>
+    <script src="app/controllers/clientCtrl.js"></script>
     <script src="app/controllers/adminCtrl.js"></script>
+    <script src="app/controllers/anonymCtrl.js"></script>
     <script src="app/controllers/doctorCtrl.js"></script>
-    <script src="app/controllers/mainCtrl.js"></script>
+    <script src="app/controllers/drugStorageCtrl.js"></script>
 </body>
 </html>
