@@ -33,7 +33,8 @@ namespace Clinic.Api.Controllers
                     Id = item.Id,
                     UserName = item.UserName,
                     Email = item.Email,
-                    PhoneNumber = item.PhoneNumber
+                    PhoneNumber = item.PhoneNumber,
+                    Confirmation = item.Confirmation
                 });
             }
             return listOfUsers;
@@ -59,7 +60,8 @@ namespace Clinic.Api.Controllers
                     Id = item.Id,
                     UserName = item.UserName,
                     Email = item.Email,
-                    PhoneNumber = item.PhoneNumber
+                    PhoneNumber = item.PhoneNumber,
+                    Confirmation = item.Confirmation
                 });
             }
 
@@ -87,6 +89,7 @@ namespace Clinic.Api.Controllers
                 result.UserName = user.UserName;
                 result.Email = user.Email;
                 result.PhoneNumber = user.PhoneNumber;
+                result.Confirmation = user.Confirmation;
                 return Ok(result);
             }
         }

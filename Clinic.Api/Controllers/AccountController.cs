@@ -89,14 +89,38 @@ namespace Clinic.Api.Controllers
         */
 
 
-        
+        // Подтверждение Email
+        [Route("ConfirmEmail")]
+        public IHttpActionResult GetConfirmEmail(string userId = "", string code = "")
+        {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+            {
+                return BadRequest("User Id and Code are required");
+            }
+
+            // необходимо сделать, что бы код исправить ошибку 
+            code = code.Replace(" ","+");
+
+            // пытаемся подтвердить Email по присланному коду и ID пользователя
+            var result = UserManager.ConfirmEmail(userId, code);
+
+            if (result.Succeeded)
+            {
+                string request = "Вы подтвердили ваш Email";
+                return Ok(request);
+            }
+            else
+            {
+                return GetErrorResult(result);
+            }
+        }
 
         // Регистрация. В модель передается:
         // UserName, Email, Password, Comfirm Password, PhoneAddress, Role
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        public IHttpActionResult Register(RegisterBindingModel model)
         {
 
             var user = new ApplicationUser()
@@ -106,18 +130,20 @@ namespace Clinic.Api.Controllers
                 PhoneNumber = model.PhoneNumber
             };
 
-            IdentityResult result;
+            // IdentityResult result;
 
             // если мы добавляем клиента
             if (model.Role.CompareTo("Client") == 0)
             {
                 user.IsClient = true;
-                result = await UserManager.CreateAsync(user, model.Password);
-                await UserManager.AddToRoleAsync(user.Id, "Client");
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
+                UserManager.Create(user, model.Password);
+                UserManager.AddToRole(user.Id, "Client");
+
+                // генерируем код для подтверждения email
+                var code = UserManager.GenerateEmailConfirmationToken(user.Id);
+                // отправляет сообщение клиенту о подтверждении регистрации со ссылкой на метод Account Controll
+                UserManager.SendEmail(user.Id, "Подтверждение Email", "Для завершения регистрации : <a href=\"http://localhost:49845/api/account/ConfirmEmail?userId=" + user.Id + "&code=" + code + "\">Завершить</a>");
+
             }
             // если мы добавляем доктора
             if (model.Role.CompareTo("Doctor") == 0)
@@ -142,20 +168,16 @@ namespace Clinic.Api.Controllers
                 else
                 {
                     user.IsDoctor = true;
+                    user.EmailConfirmed = true;
 
                     // подтверждение аккаунта для доктора
                     user.Confirmation = true;
 
-                    result = await UserManager.CreateAsync(user, model.Password);
-                    await UserManager.AddToRoleAsync(user.Id, "Doctor");
+                    UserManager.Create(user, model.Password);
+                    UserManager.AddToRole(user.Id, "Doctor");
 
                     // должны заполнить визиты для доктора нулевыми значениями и связать их с датой и временем
                     FillVisits(user.Id);
-
-                    if (!result.Succeeded)
-                    {
-                        return GetErrorResult(result);
-                    }
                 }
             }
 

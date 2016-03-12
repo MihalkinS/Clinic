@@ -6,6 +6,7 @@ using Microsoft.Owin;
 using Clinic.Api.Models;
 using Clinic.Api.Models.Context;
 using Clinic.Api.Models.AppModels;
+using System.Net.Mail;
 
 namespace Clinic.Api
 {
@@ -41,7 +42,40 @@ namespace Clinic.Api
             {
                 manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
+
+            manager.EmailService = new EmailService();
+
             return manager;
         }
+
     }
-}
+
+    // класс для отправки сообщения пользователям
+    public class EmailService : IIdentityMessageService
+    {
+        public Task SendAsync(IdentityMessage message)
+        {
+            // настройка логина, пароля отправителя
+            var from = "mihalkins.mogilev@gmail.com";
+            var pass = "0074592s";
+
+            // адрес и порт smtp-сервера, с которого мы и будем отправлять письмо
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 25);
+
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential(from, pass);
+            client.EnableSsl = true;
+
+            // создаем письмо: message.Destination - адрес получателя
+            var mail = new MailMessage(from, message.Destination);
+            mail.Subject = message.Subject;
+            mail.Body = message.Body;
+            mail.IsBodyHtml = true;
+
+            return client.SendMailAsync(mail);
+
+        }
+    }
+
+}       

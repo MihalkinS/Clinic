@@ -34,6 +34,13 @@ namespace Clinic.Api.Providers
 
             ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
 
+			// если пользователь не подтвердил Email - доступ на сайт будет закрыт
+            if(user.EmailConfirmed == false)
+            {
+                context.SetError("invalid_grant", "You Email not confirmed!");
+                return;
+            }
+
             if (user == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");

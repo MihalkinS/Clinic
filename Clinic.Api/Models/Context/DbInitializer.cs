@@ -19,12 +19,125 @@ namespace Clinic.Api.Models.Context
             SetAdministrator(context);
 
             // Заполняем несколько недель(начиная с текущей) пустыми значениями по времени
-            SetAnyWeek(context);
+       //     SetAnyWeek(context);
 
-            TestHistory(context);
+         //   TestHistory(context);
+
+            TestDoctors(context);
 
             base.Seed(context);
         }
+
+        private void TestDoctors(ApplicationDbContext context)
+        {
+
+            var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
+
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+            var doctor1 = new ApplicationUser()
+            {
+                Email = "doctor1@HeathyPet.com",
+                UserName = "Doctor1",
+                PhoneNumber = "5580808",
+                Confirmation = true,
+                EmailConfirmed = true
+            };
+
+            var doctor2 = new ApplicationUser()
+            {
+                Email = "doctor2@HeathyPet.com",
+                UserName = "Doctor2",
+                PhoneNumber = "5457243",
+                Confirmation = true
+            };
+
+            var result1 = userManager.Create(doctor1, "Qwerty_6");
+            if (result1.Succeeded)
+            {
+                userManager.AddToRole(doctor1.Id, ROLES.DOCTOR);
+            }
+
+            var result2 = userManager.Create(doctor2, "Qwerty_6");
+            if (result1.Succeeded)
+            {
+                userManager.AddToRole(doctor2.Id, ROLES.DOCTOR);
+            }
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                Doctor profile1 = new Doctor()
+                {
+                    UserId = doctor1.Id,
+                    Address = "Колоса 76",
+                    FirstName = "Галина",
+                    LastName = "Твердорукова",
+                    MiddleName = "Александровна",
+                    Position = "Врач",
+                    AvatarURL = "../content/img/avatars/Твердорукова.jpg",
+                    WorkTimeStart = "00:08:00",
+                    WorkTimeFinish = "00:17:00"
+                };
+                Doctor profile2 = new Doctor()
+                {
+                    UserId = doctor2.Id,
+                    Address = "Колоса 78",
+                    FirstName = "Анатолий",
+                    LastName = "Белохалатов",
+                    MiddleName = "Иванович",
+                    Position = "Главный специалист",
+                    AvatarURL = "../content/img/avatars/Белохалатов.jpg",
+                    WorkTimeStart = "00:09:00",
+                    WorkTimeFinish = "00:18:00"
+                };
+                db.Doctors.Add(profile1);
+                db.Doctors.Add(profile2);
+                db.SaveChanges();
+
+                FillVisits(doctor1.Id);
+                FillVisits(doctor2.Id);
+
+            }
+
+        }
+
+        // Заполняем нулевыми значениями визиты на все время для нового доктора
+        private void FillVisits(string doctorId)
+        {
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+
+                //ищем доктора по ID
+                var user = db.Users.Find(doctorId);
+
+                // получаем все интервалы времени, которые существуют
+                var times = db.Times;
+                List<Time> timesList = new List<Time>();
+                foreach (var time in times)
+                {
+                    timesList.Add(time);
+                }
+
+                // каждый интервал времени связвываем с новым пустым визитом
+                foreach (var timeInterval in timesList)
+                {
+                    Visit visit = new Visit()
+                    {
+                        Description = "emptyDescription",
+                        Сonfirmation = false
+                    };
+
+                    visit.Users.Add(user);
+                    visit.Times.Add(timeInterval);
+
+                    db.Visits.Add(visit);
+                    db.SaveChanges();
+                }
+            }
+
+        }
+
+
 
         private void TestHistory(ApplicationDbContext context)
         {
@@ -45,6 +158,7 @@ namespace Clinic.Api.Models.Context
 
         }
 
+        #region Admin init
         // Для заполнения информации о ролях
         private struct ROLES
         {
@@ -79,7 +193,7 @@ namespace Clinic.Api.Models.Context
         {
             public const string USERNAME = "Admin";
             public const string EMAIL = "admin@HealthyPet.com";
-            public const string PASSWORD = "Qwerty6";
+            public const string PASSWORD = "Qwerty_6";
         }
 
         // Для заполнения Администратора
@@ -93,7 +207,9 @@ namespace Clinic.Api.Models.Context
             var administrator = new ApplicationUser()
             {
                 Email = ADMIN.EMAIL,
-                UserName = ADMIN.USERNAME
+                UserName = ADMIN.USERNAME,
+                Confirmation = true,
+                EmailConfirmed = true
             };
 
             var result = userManager.Create(administrator, ADMIN.PASSWORD);
@@ -105,7 +221,7 @@ namespace Clinic.Api.Models.Context
             }
 
         }
-
+        #endregion
 
 
         // 24 часа * (2 интервала по 30 минут) = 48 раз по 30 минут
@@ -116,6 +232,7 @@ namespace Clinic.Api.Models.Context
 
         // время одного интервала
         private const int INATERVALDURATION = 60 / INTERVALINHOUR;
+
 
         // Для заполнения 5 недель пустыми значениями времени
         private void SetAnyWeek(ApplicationDbContext context)
@@ -128,7 +245,7 @@ namespace Clinic.Api.Models.Context
             TimeSpan timeinterval = TimeSpan.FromMinutes(INATERVALDURATION);
 
             // заполняем 7 дней в неделю * на количество недель!!!!!!!!!!!!!!!!!!!!!!
-            for (int i = 0; i < 7 * 3; i++)
+            for (int i = 0; i < 7 * 2; i++)
             {
                 // создаем день
                 Day day = new Day() { Date = currDay, DayOfWeek = currDay.DayOfWeek.ToString() };
