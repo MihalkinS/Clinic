@@ -1,0 +1,65 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Регистрация пользователя</h1>
+        </div>
+    </div>
+</div>
+    <div class="container">
+        <div class="row" ng-show="viewForm == true">
+            <div class="col-lg-6 col-lg-offset-3">
+                <form class="form-horizontal" name="signUpForm">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="email" class="col-lg-3 control-label">Email</label>
+                            <div class="col-lg-7">
+                                <input type="email" ng-model="loginData.email" class="form-control" id="email" placeholder="Ваш Email" autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="userName" class="col-lg-3 control-label">Логин</label>
+                            <div class="col-lg-7">
+                                <input type="text" ng-model="loginData.userName" class="form-control" id="userName" placeholder="Логин">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber" class="col-lg-3 control-label">Номер телефона</label>
+                            <div class="col-lg-7">
+                                <input type="text" ng-model="loginData.phoneNumber" class="form-control" id="phoneNumber" placeholder="Номер телефона">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-lg-3 control-label">Пароль</label>
+                            <div class="col-lg-7">
+                                <input type="password" ng-model="loginData.password" class="form-control" id="password" placeholder="Пароль">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword" class="col-lg-3 control-label">Повторите пароль</label>
+                            <div class="col-lg-7">
+                                <input type="password" ng-model="loginData.confirmPassword" class="form-control" id="confirmPassword" placeholder="Повторите пароль">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-8 col-lg-offset-2">
+                                <button type="reset" class="btn btn-default" ng-click="redirectToMainPage()">На главную</button>
+                                <button type="submit" ng-click="register(signUpForm, loginData)" class="btn btn-primary">Регистрация</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12 text-center">
+                                <div class="text-danger" ng-show="errorMessage != ''">
+                                    {{ errorMessage }}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="row" ng-hide="viewForm == true">
+            <div class="page-header">
+                <h2>На ваш Email <small>{{loginData.email}}</small> отправлено письмо </h2>
+            </div>
+        </div>
+    </div>

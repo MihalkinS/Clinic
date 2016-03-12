@@ -38,10 +38,17 @@ clinicApp.factory('authService', ['$http', '$q', 'localStorageService', function
     var _saveRegistration = function (registration) {
 
         _logOut();
+        var deferred = $q.defer();
 
-        return $http.post(serverURL + 'api/account/register', registration).then(function (response) {
-            return response;
-        });
+        $http.post(serverURL + 'api/account/register', registration)
+        .success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (err, status) {
+                deferred.reject(err);
+            });
+
+        return deferred.promise;
 
     };
 
