@@ -42,7 +42,11 @@ clinicApp.factory('adminService', ['$http', '$q', 'localStorageService', functio
 
     var _drug = {};
 
-    var _getDrugs= function () {
+    var _procedures = {};
+
+
+
+    var _getDrugs = function () {
 
         var authData = localStorageService.get('authorizationData');
 
@@ -127,6 +131,65 @@ clinicApp.factory('adminService', ['$http', '$q', 'localStorageService', functio
 
     };
 
+    var _getProcedures = function () {
+
+        return $http.get(serverURL + 'api/Procedure')
+        .then(function (results) {
+
+            _procedures = results.data;
+            return results;
+
+        });
+
+    };
+
+    var _saveProcedure = function (newProcedure) {
+
+        var authData = localStorageService.get('authorizationData');
+
+        var deferred = $q.defer();
+
+        $http.post(serverURL + 'api/Procedure', newProcedure, {
+            headers: {
+                'Authorization': ' Bearer ' + authData.token
+            }
+        })
+        .success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (err, status) {
+                deferred.reject(err);
+            });
+
+        return deferred.promise;
+    };
+
+    var _deleteProcedure = function (procedureId) {
+
+        var authData = localStorageService.get('authorizationData');
+
+        var deferred = $q.defer();
+
+        console.log(procedureId);
+
+        $http.delete(serverURL + 'api/procedure?procedureId=' + procedureId, {
+            headers: {
+                'Authorization': ' Bearer ' + authData.token
+            }
+        })
+        .success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (err, status) {
+                deferred.reject(err);
+            });
+
+        return deferred.promise;
+    };
+
+
+
+
     adminServiceFactory.getDoctors = _getDoctors;
     adminServiceFactory.deleteDoctor = _deleteDoctor;
     adminServiceFactory.doctors = _doctors;
@@ -135,7 +198,10 @@ clinicApp.factory('adminService', ['$http', '$q', 'localStorageService', functio
     adminServiceFactory.getDrugById = _getDrugById;
     adminServiceFactory.addDrug = _addDrug;
     adminServiceFactory.addDrugInStorage = _addDrugInStorage;
-
+    adminServiceFactory.getProcedures = _getProcedures;
+    adminServiceFactory.procedures = _procedures;
+    adminServiceFactory.saveProcedure = _saveProcedure;
+    adminServiceFactory.deleteProcedure = _deleteProcedure;
 
 
     return adminServiceFactory;

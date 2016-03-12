@@ -19,13 +19,36 @@ namespace Clinic.Api.Models.Context
             SetAdministrator(context);
 
             // Заполняем несколько недель(начиная с текущей) пустыми значениями по времени
-       //     SetAnyWeek(context);
+            //   SetAnyWeek(context);
 
-            TestHistory(context);
+            //   TestHistory(context);
+
+            TestProcedures(context);
 
         //    TestDoctors(context);
 
             base.Seed(context);
+        }
+
+        private void TestProcedures(ApplicationDbContext context)
+        {
+            Procedure pr1 = new Procedure()
+            {
+                Name = "Операция",
+                Time = TimeSpan.FromHours(2),
+                Cost = 100
+            };
+
+            Procedure pr2 = new Procedure()
+            {
+                Name = "Операция 2 ",
+                Time = TimeSpan.FromMinutes(100),
+                Cost = 210
+            };
+
+            context.Procedures.Add(pr1);
+            context.Procedures.Add(pr2);
+            context.SaveChanges();
         }
 
         private void TestDoctors(ApplicationDbContext context)

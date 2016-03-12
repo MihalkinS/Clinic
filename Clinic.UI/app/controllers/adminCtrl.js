@@ -1,4 +1,4 @@
-﻿clinicApp.controller('adminCtrl', ['$scope', '$location', 'authService', 'adminService', function ($scope, $location, authService, adminService) {
+﻿clinicApp.controller('adminCtrl', ['$scope', '$window', '$location', 'authService', 'adminService', function ($scope, $window, $location, authService, adminService) {
 
     if (!authService.authentication.isAuth || authService.authentication.userRole != 'Administrator') {
         $location.path("/");
@@ -77,6 +77,12 @@
         cost: ""
     };
 
+    $scope.newProcedure = {
+        name: "",
+        time: "",
+        cost: ""
+    };
+
     $scope.saveDrug = function (newDrug, drugForm) {
         if (drugForm.$valid) {
             adminService.addDrug(newDrug).then(function (results) {
@@ -88,4 +94,55 @@
             });
         };
     };
+
+    $scope.procedures = adminService.procedures;
+
+    adminService.getProcedures().then(function (results) {
+
+        $scope.procedures = results.data;
+
+    }, function (error) {
+
+        alert(error.data.message);
+
+    });
+
+    $scope.saveProcedure = function (newProcedure, procedureForm) {
+        if (procedureForm.$valid) {
+            adminService.saveProcedure(newProcedure).then(function (results) {
+
+                adminService.getProcedures().then(function (results) {
+
+                    $scope.procedures = results.data;
+
+                }, function (error) {
+
+                    alert(error.data.message);
+
+                });
+
+            }, function (error) {
+                alert(error.data.message);
+            });
+        };
+    };
+
+    $scope.deleteProcedure = function (id) {
+        adminService.deleteProcedure(id).then(function (results) {
+
+            adminService.getProcedures().then(function (results) {
+
+                $scope.procedures = results.data;
+
+            }, function (error) {
+
+                alert(error.data.message);
+
+            });
+
+            }, function (error) {
+                alert(error.data.message);
+            });
+    };
+
 }]);

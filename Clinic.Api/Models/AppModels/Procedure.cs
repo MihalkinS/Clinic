@@ -11,13 +11,14 @@ namespace Clinic.Api.Models.AppModels
         [Key]
         public int Id { get; set; }
 
+        public string Name { get; set; }
         public TimeSpan Time { get; set; }
         public int Cost { get; set; }
 
-        public ICollection<Visit> Visits { get; set; }
+        //public ICollection<Visit> Visits { get; set; }
         public Procedure()
         {
-            Visits = new List<Visit>();
+           // Visits = new List<Visit>();
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Clinic.Api.Controllers
             {
                 dayOfWeek = d.DayOfWeek,
                 day = d.Date.Day,
-                month = d.Date.Month,
+                month = d.Date.Month > 10 ? d.Date.Month.ToString() : "0" + d.Date.Month.ToString(),
                 year = d.Date.Year,
                 id = d.Id
             });
@@ -207,8 +207,34 @@ namespace Clinic.Api.Controllers
 
         }
 
+        [AllowAnonymous]
+        [Route("TimeIntervals")]
+        public IHttpActionResult GetTimeIntervals()
+        {
 
-        
-        
+            var result = db.Times.Select(r => r.Visits.Select(t => new
+            {
+                user = t.Users.All(u => u.IsDoctor == true)
+            }));
+
+            // оставляем только те интервалы времени, которые предназначаются отдельному доктору
+            var times = db.Times.Select(x => new
+            {
+                Id = x.Id,
+                HM = x.HourAndMinutes,
+                doctorId = x.Visits.Where(v => v.Users.Any(u => u.IsDoctor == true)).Select(r => r.Users.Where(i => i.IsDoctor == true).Select(y => y.Id))
+            });
+
+            if (times == null)
+            {
+                return BadRequest("Week not found!");
+            }
+            else
+            {
+                return Ok(times);
+            }
+        }
+
+
     }
 }
