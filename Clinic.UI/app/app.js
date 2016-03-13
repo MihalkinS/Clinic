@@ -15,6 +15,12 @@ clinicApp
             templateUrl: '/views/Doctor/visits.html',
             controller: 'doctorCtrl'
         });
+        $routeProvider.when('/doctor/visit/:id',
+        {
+            templateUrl: '/views/Doctor/AddVisit.html',
+            controller: 'doctorVisitCtrl'
+        });
+
 
         $routeProvider.when('/client/calendar/',
         {

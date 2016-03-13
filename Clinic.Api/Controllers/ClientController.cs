@@ -21,10 +21,23 @@ namespace Clinic.Api.Controllers
 
         // Получить всех клиентов (профили)
         // GET: api/Client
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Doctor")]
         public IHttpActionResult Get()
         {
 
+            var users = db.Clients.Select(x => new
+            {
+                Id = x.UserId,
+                FIO = string.Concat(x.LastName, " ", x.FirstName, " ", x.MiddleName),
+                Breed = x.Breed,
+                Color = x.Color,
+                PetName = x.PetName,
+                Address = x.Address
+            });
+
+            return Ok(users);
+
+            /*
             List<ClientViewModel> listOfClients = new List<ClientViewModel>();
 
             var role = db.Roles.SingleOrDefault(m => m.Name == "Client");
@@ -40,7 +53,7 @@ namespace Clinic.Api.Controllers
 
                 foreach (var item in usersInRoleId)
                 {
-                    var client = db.Clients.SingleOrDefault(d => d.UserId == item);
+                    var client = db.Clients.FirstOrDefault(d => d.UserId == item);
                     if (client != null)
                     {
                         // так как client имеет кроме свойств еще и связи
@@ -51,7 +64,7 @@ namespace Clinic.Api.Controllers
 
                 return Ok(listOfClients);
             }
-
+           */
 
         }
 

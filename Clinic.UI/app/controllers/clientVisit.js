@@ -62,7 +62,7 @@
             console.log($scope.visit);
 
             clientService.saveVisit($scope.visit).then(function (results) {
-
+                $location.path("/client/calendar/");
             },function (error) {
                 alert(error);
             })

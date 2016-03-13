@@ -25,14 +25,14 @@
             </div>
             <div class="row margin-top-17">
                 <div class="col-lg-2">
-                    <img class="img-circle avatar" src="../content/img/avatars/Твердорукова.jpg" />
+                    <img class="img-circle avatar" src="{{doctor.AvatarURL}}" />
                 </div>
                 <div class="col-lg-9 col-lg-offset-1">
                     <ul class="breadcrumb">
-                        <li class="active">Твердорукова Галина Александровна</li>
+                        <li class="active">{{doctor.LastName}} {{doctor.FirstName}} {{doctor.MiddleName}}</li>
                     </ul>
                     <ul class="breadcrumb">
-                        <li class="active">Главный специалист</li>
+                        <li class="active">{{doctor.Position}}</li>
                     </ul>
                 </div>
             </div>
@@ -45,7 +45,6 @@
         </div>
     </div>
     <!--///////////////////////////////////////////////////-->
-
     <!--
      Прокрутка недели <>
     -->
@@ -55,18 +54,18 @@
                 <div class="row">
                     <!--/////////////////////////////////////////////////////////////-->
                     <div class="col-lg-4 col-onright">
-                        <button class="btn btn-info" ng-click="currWeekDown(currWeek.weekid)">&laquo; Неделю назад</button>
+                        <button class="btn btn-info" ng-click="currWeekDown(doctorId, currWeek[0].id)">&laquo; Неделю назад</button>
                     </div>
                     <div class="col-lg-4 col-centered">
                         <h5>
                             <strong>
-                                Неделя с {{ currWeek.weekDays[0] }}
-                                по {{ currWeek.weekDays[6] }} ({{ currWeek.year }})
+                                Неделя с {{ currWeek[0].day }}.{{ currWeek[0].month }}
+                                по {{ currWeek[6].day }}.{{ currWeek[0].month }} ({{ currWeek[0].year }})
                             </strong>
                         </h5>
                     </div>
                     <div class="col-lg-4 col-onleft">
-                        <button class="btn btn-info" ng-click="currWeekUp(currWeek.weekid)">Неделю вперед &raquo;</button>
+                        <button class="btn btn-info" ng-click="currWeekUp(doctorId, currWeek[6].id)">Неделю вперед &raquo;</button>
                     </div>
                     <!--/////////////////////////////////////////////////////////////-->
                 </div>
@@ -85,172 +84,129 @@
                         <thead>
                             <tr>
                                 <th class="timeColums active"></th>
-                                <th ng-repeat="day in week">
-                                    <p>{{ day }}</p>
-                                    <p>{{ currWeek.weekDays[$index] }}</p>
+                                <th ng-repeat="day in currWeek">
+                                    <p>{{ day.day }}.{{ day.month }}</p>
+                                    <p>{{ day.dayOfWeek }}</p>
                                 </th>
-                            </tr>
-                            <tr ng-repeat="timeInterval in allTimeOfDay">
-
-                                <td><em>{{timeInterval.hour}}<sup>{{timeInterval.minutes}}</sup></em></td>
-
-                                <td ng-if="mondayTime[$index] == 'free'">
-                                    <small>
-                                        <span class="linkReservation" data-toggle="modal" data-target="#myModal">
-                                            Запись
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="monday" />
-                                </td>
-                                <td ng-if="mondayTime[$index] == 'busy'">
-                                    <small>
-                                        <span class="text-danger textBusy">Занято</span>
-                                    </small>
-                                </td>
-                                <td ng-if="mondayTime[$index] == 'notConfirmed'">
-                                    <small>
-                                        <span class="linkConfirm" data-toggle="modal" data-target="#myModal">
-                                            Подтвердить
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="monday" />
-                                </td>
-
-                                <td ng-if="tuesdayTime[$index] == 'free'">
-                                    <small>
-                                        <span class="linkReservation" data-toggle="modal" data-target="#myModal">
-                                            Запись
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="tuesday" />
-                                </td>
-                                <td ng-if="tuesdayTime[$index] == 'busy'">
-                                    <small>
-                                        <span class="text-danger textBusy">Занято</span>
-                                    </small>
-                                </td>
-                                <td ng-if="tuesdayTime[$index] == 'notConfirmed'">
-                                    <small>
-                                        <span class="linkConfirm" data-toggle="modal" data-target="#myModal">
-                                            Подтвердить
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="tuesday" />
-                                </td>
-
-                                <td ng-if="wednesdayTime[$index] == 'free'">
-                                    <small>
-                                        <span class="linkReservation" data-toggle="modal" data-target="#myModal">
-                                            Запись
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="wednesday" />
-                                </td>
-                                <td ng-if="wednesdayTime[$index] == 'busy'">
-                                    <small>
-                                        <span class="text-danger textBusy">Занято</span>
-                                    </small>
-                                </td>
-                                <td ng-if="wednesdayTime[$index] == 'notConfirmed'">
-                                    <small>
-                                        <span class="linkConfirm" data-toggle="modal" data-target="#myModal">
-                                            Подтвердить
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="wednesday" />
-                                </td>
-
-                                <td ng-if="thursdayTime[$index] == 'free'">
-                                    <small>
-                                        <span class="linkReservation" data-toggle="modal" data-target="#myModal">
-                                            Запись
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="thursday" />
-                                </td>
-                                <td ng-if="thursdayTime[$index] == 'busy'">
-                                    <small>
-                                        <span class="text-danger textBusy">Занято</span>
-                                    </small>
-                                </td>
-                                <td ng-if="thursdayTime[$index] == 'notConfirmed'">
-                                    <small>
-                                        <span class="linkConfirm" data-toggle="modal" data-target="#myModal">
-                                            Подтвердить
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="thursday" />
-                                </td>
-
-                                <td ng-if="fridayTime[$index] == 'free'">
-                                    <small>
-                                        <span class="linkReservation" data-toggle="modal" data-target="#myModal">
-                                            Запись
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="friday" />
-                                </td>
-                                <td ng-if="fridayTime[$index] == 'busy'">
-                                    <small>
-                                        <span class="text-danger textBusy">Занято</span>
-                                    </small>
-                                </td>
-                                <td ng-if="fridayTime[$index] == 'notConfirmed'">
-                                    <small>
-                                        <span class="linkConfirm" data-toggle="modal" data-target="#myModal">
-                                            Подтвердить
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="friday" />
-                                </td>
-
-                                <td ng-if="saturdayTime[$index] == 'free'">
-                                    <small>
-                                        <span class="linkReservation" data-toggle="modal" data-target="#myModal">
-                                            Запись
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="saturday" />
-                                </td>
-                                <td ng-if="saturdayTime[$index] == 'busy'">
-                                    <small>
-                                        <span class="text-danger textBusy">Занято</span>
-                                    </small>
-                                </td>
-                                <td ng-if="saturdayTime[$index] == 'notConfirmed'">
-                                    <small>
-                                        <span class="linkConfirm" data-toggle="modal" data-target="#myModal">
-                                            Подтвердить
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="saturday" />
-                                </td>
-
-                                <td ng-if="sundayTime[$index] == 'free'">
-                                    <small>
-                                        <span class="linkReservation" data-toggle="modal" data-target="#myModal">
-                                            Запись
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="sunday" />
-                                </td>
-                                <td ng-if="sundayTime[$index] == 'busy'">
-                                    <small>
-                                        <span class="text-danger textBusy">Занято</span>
-                                    </small>
-                                </td>
-                                <td ng-if="sundayTime[$index] == 'notConfirmed'">
-                                    <small>
-                                        <span class="linkConfirm" data-toggle="modal" data-target="#myModal">
-                                            Подтвердить
-                                        </span>
-                                    </small>
-                                    <input type="hidden" id="{{$index}}" value="sunday" />
-                                </td>
-
                             </tr>
                         </thead>
                         <tbody>
+                            <tr ng-repeat="interval in timeInterval track by $index"
+                                ng-if="interval >= doctor.WorkTimeStart && interval <= doctor.WorkTimeFinish ">
+                                <td>{{ interval }}</td>
+                                <td ng-if="fisrtDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <a href="#/doctor/visit/{{fisrtDayMass[($index * 4) + 2]}}">
+                                            <span class="linkReservation">
+                                                Свободно
+                                            </span>
+                                        </a>
+                                    </small>
+                                </td>
+                                <td ng-if="fisrtDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="secondDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <a href="#/doctor/visit/{{secondDayMass[($index * 4) + 2]}}">
+                                            <span class="linkReservation">
+                                                Свободно
+                                            </span>
+                                        </a>
+                                    </small>
+                                </td>
+                                <td ng-if="secondDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="thirdDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <a href="#/doctor/visit/{{thirdDayMass[($index * 4) + 2]}}">
+                                            <span class="linkReservation">
+                                                Свободно
+                                            </span>
+                                        </a>
+                                    </small>
+                                </td>
+                                <td ng-if="thirdDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="fourthDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <a href="#/doctor/visit/{{fourthDayMass[($index * 4) + 2]}}">
+                                            <span class="linkReservation">
+                                                Свободно
+                                            </span>
+                                        </a>
+                                    </small>
+                                </td>
+                                <td ng-if="fourthDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="fifthDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <a href="#/doctor/visit/{{fifthDayMass[($index * 4) + 2]}}">
+                                            <span class="linkReservation">
+                                                Свободно
+                                            </span>
+                                        </a>
+                                    </small>
+                                </td>
+                                <td ng-if="fifthDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="sixthDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <a href="#/doctor/visit/{{sixthDayMass[($index * 4) + 2]}}">
+                                            <span class="linkReservation">
+                                                Свободно
+                                            </span>
+                                        </a>
+                                    </small>
+                                </td>
+                                <td ng-if="sixthDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="seventhDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <a href="#/doctor/visit/{{seventhDayMass[($index * 4) + 2]}}">
+                                            <span class="linkReservation">
+                                                Свободно
+                                            </span>
+                                        </a>
+                                    </small>
+                                </td>
+                                <td ng-if="seventhDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -258,19 +214,5 @@
             </div>
         </div>
     </div>
-    <!--
-    <div class="margin-top-25px">
-        <div class="row">
-            <div class="center-block">
-                <div class="col-lg-1 calendarHeader">
 
-                </div>
-                <div ng-repeat="day in week" class="col-lg-1 calendarHeader">
-                    <p>{{ day }}</p>
-                    <p>{{ currWeek.weekDays[$index] }}</p>
-                </div>
-            </div>            
-        </div>
-    </div>
-    -->
 </div>

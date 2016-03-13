@@ -1,0 +1,65 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Добавить визит</h1>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <form class="form-horizontal" name="visitForm">
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-2 col-lg-offset-3">
+                            <button type="submit" ng-click="saveVisit(visitForm, proc.Id, drug.id, client.Id)" class="btn btn-success">Сохранить</button>
+                        </div>
+                        <div class="col-lg-5 col-lg-offset-2">
+                            <button type="reset" ng-click="redirectToCalendar()" class="btn btn-default">Расписание</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="col-lg-3 control-label">Клиент</label>
+                        <div class="col-lg-9">
+                            <select class="form-control" id="select" ng-model="client"
+                                    ng-options="client.FIO for client in clients track by client.FIO" required></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-lg-3 control-label">Описание</label>
+                        <div class="col-lg-9">
+                            <textarea class="form-control" rows="3" id="textArea" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="select" class="col-lg-3 control-label">Выберите процедуру</label>
+                        <div class="col-lg-9">
+                            <select class="form-control" id="select" ng-model="proc"
+                                    ng-options="procedure.Name for procedure in procedures track by procedure.Name" required></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="time" class="col-lg-3 control-label">Время процедуры</label>
+                        <div class="col-lg-9">
+                            <input type="text" disabled="" value="{{proc.Time}}" class="form-control" id="time">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cost" class="col-lg-3 control-label">Цена</label>
+                        <div class="col-lg-9">
+                            <input type="text" disabled="" value="{{proc.Cost}}" class="form-control" id="cost">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="drug" class="col-lg-3 control-label">Препараты</label>
+                        <div class="col-lg-9">
+                            <select class="form-control" id="drug" ng-model="drug"
+                                    ng-options="drug.drugName for drug in drugs track by drug.drugName" required></select>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+

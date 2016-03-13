@@ -102,7 +102,75 @@ namespace Clinic.Api.Controllers
             return Ok();
         }
 
+        // Записать визит (запись делает доктор)
+        [Route("FromDoctor")]
+        [Authorize(Roles = "Doctor, Client")]
+        public IHttpActionResult Post([FromBody]VisitPostForDoctorModel model)
+        {
 
+            var doctor = db.Users.FirstOrDefault(x => x.Id == model.DoctorId);
+            if (doctor == null)
+            {
+                return BadRequest("Doctor not found!");
+            }
+            var client = db.Users.FirstOrDefault(x => x.Id == model.ClientId);
+            if (client == null)
+            {
+                return BadRequest("Doctor not found!");
+            }
+            var procedure = db.Procedures.FirstOrDefault(x => x.Id == model.ProcedureId);
+            if (procedure == null)
+            {
+                return BadRequest("Doctor not found!");
+            }
+            var drug = db.Drugs.FirstOrDefault(x => x.Id == model.DrugId);
+            if (procedure == null)
+            {
+                return BadRequest("Drug not found!");
+            }
+
+            var startInterval = db.Times.FirstOrDefault(x => x.Id == model.TimeId);
+
+            var finishInterval = startInterval.HourAndMinutes.Add(procedure.Time);
+
+            var timesForDoctor = db.Times.Where(x => x.DoctorId == model.DoctorId && x.DayId == model.DayId);
+            var times = timesForDoctor.Where(x => x.HourAndMinutes >= startInterval.HourAndMinutes && x.HourAndMinutes < finishInterval);
+            var timeIsBusy = times.FirstOrDefault(x => x.VisitId != null);
+
+            if (timeIsBusy != null)
+            {
+                return BadRequest("Time is busy!");
+            }
+
+            Visit newVisit = new Visit()
+            {
+                Doctor = doctor,
+                Client = client,
+                Procedure = procedure,
+                Description = model.Description == null ? "empty" : model.Description,
+                Сonfirmation = true
+            };
+
+            newVisit.Drugs.Add(drug);
+
+            db.Visits.Add(newVisit);
+            db.SaveChanges();
+
+            foreach (var t in times)
+            {
+                t.Visit = newVisit;
+                db.Entry(t).State = EntityState.Modified;
+            }
+
+            foreach (var t in times)
+            {
+                newVisit.Times.Add(t);
+            }
+            db.Entry(newVisit).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return Ok();
+        }
 
         // Записать визит по ID
         // PUT: api/Visit/5
