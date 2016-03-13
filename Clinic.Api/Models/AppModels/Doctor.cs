@@ -12,7 +12,8 @@ namespace Clinic.Api.Models.AppModels
         public string Position { get; set; }
         public string WorkTimeStart { get; set; }
         public string WorkTimeFinish { get; set; }
-
+        
+        /*
         public ICollection<Visit> Visits { get; set; }
        // public ICollection<Comment> Comments { get; set; }
 
@@ -21,7 +22,7 @@ namespace Clinic.Api.Models.AppModels
             Visits = new List<Visit>();
           //  Comments = new List<Comment>();
         }
-
+        */
 
     }
 }

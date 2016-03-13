@@ -23,9 +23,9 @@ namespace Clinic.Api.Models.Context
 
             //   TestHistory(context);
 
-            TestProcedures(context);
+            // TestProcedures(context);
 
-        //    TestDoctors(context);
+            TestDoctors(context);
 
             base.Seed(context);
         }
@@ -67,6 +67,8 @@ namespace Clinic.Api.Models.Context
                 EmailConfirmed = true
             };
 
+
+
             var doctor2 = new ApplicationUser()
             {
                 Email = "doctor2@HeathyPet.com",
@@ -97,8 +99,8 @@ namespace Clinic.Api.Models.Context
                     MiddleName = "Александровна",
                     Position = "Врач",
                     AvatarURL = "../content/img/avatars/Твердорукова.jpg",
-                    WorkTimeStart = "00:08:00",
-                    WorkTimeFinish = "00:17:00"
+                    WorkTimeStart = "08:00:00",
+                    WorkTimeFinish = "17:00:00"
                 };
                 Doctor profile2 = new Doctor()
                 {
@@ -109,20 +111,74 @@ namespace Clinic.Api.Models.Context
                     MiddleName = "Иванович",
                     Position = "Главный специалист",
                     AvatarURL = "../content/img/avatars/Белохалатов.jpg",
-                    WorkTimeStart = "00:09:00",
-                    WorkTimeFinish = "00:18:00"
+                    WorkTimeStart = "09:00:00",
+                    WorkTimeFinish = "18:00:00"
                 };
                 db.Doctors.Add(profile1);
                 db.Doctors.Add(profile2);
                 db.SaveChanges();
 
-                FillVisits(doctor1.Id);
-                FillVisits(doctor2.Id);
+                FillTimes(db, doctor1.Id);
+                FillTimes(db, doctor2.Id);
 
             }
 
         }
 
+        // Для заполнения 5 недель пустыми значениями времени
+        private void FillTimes(ApplicationDbContext context, string doctorId)
+        {
+            // получаем начальный день
+            DateTime currDay = DateTime.Now.Date;
+            //var currday = currDay.Date;
+
+            // интервал времени в формате TimeSpan
+            TimeSpan timeinterval = TimeSpan.FromMinutes(INATERVALDURATION);
+
+            // заполняем 7 дней в неделю * на количество недель!!!!!!!!!!!!!!!!!!!!!!
+            for (int i = 0; i < 7 * 2; i++)
+            {
+                // создаем день
+                Day day = new Day() { Date = currDay, DayOfWeek = currDay.DayOfWeek.ToString() };
+
+                // помещаем день в БД
+                context.Days.Add(day);
+                context.SaveChanges();
+
+                // следующий день для заполнения
+                currDay = currDay.AddDays(1);
+
+                // начальный интервал в дне 00:00:00
+                TimeSpan hourAndMinutes = TimeSpan.Zero;
+
+                for (int interval = 0; interval < ALLINTERVALINDAY; interval++)
+                {
+                    
+                    var doctor = context.Users.Find(doctorId);
+
+                    // создаем интервал и привязываем к Day
+                    Time time = new Time()
+                    {
+                        HourAndMinutes = hourAndMinutes,
+                        Day = day,
+                        Doctor = doctor
+                    };
+
+                    // добавляем к БД
+                    context.Times.Add(time);
+                    context.SaveChanges();
+
+                    // получаем время следующего интервала
+                    hourAndMinutes = hourAndMinutes.Add(timeinterval);
+                }
+            }
+        }
+
+
+
+
+
+        /*
         // Заполняем нулевыми значениями визиты на все время для нового доктора
         private void FillVisits(string doctorId)
         {
@@ -141,17 +197,17 @@ namespace Clinic.Api.Models.Context
                     timesList.Add(time);
                 }
 
-                // каждый интервал времени связвываем с новым пустым визитом
+                // каждый интервал времени связываем с новым пустым визитом
                 foreach (var timeInterval in timesList)
                 {
                     Visit visit = new Visit()
                     {
                         Description = "emptyDescription",
-                        Сonfirmation = false
+                        Сonfirmation = false,
+                        Doctor = user
                     };
 
-                    visit.Users.Add(user);
-                    visit.Times.Add(timeInterval);
+                    //visit.Times.Add(timeInterval);
 
                     db.Visits.Add(visit);
                     db.SaveChanges();
@@ -159,7 +215,7 @@ namespace Clinic.Api.Models.Context
             }
 
         }
-
+        */
 
 
         private void TestHistory(ApplicationDbContext context)
@@ -175,10 +231,6 @@ namespace Clinic.Api.Models.Context
 
             context.DrugStorage.AddRange(new List<DrugStorage> { storage1, storage2 });
             context.SaveChanges();
-
-
-
-
         }
 
         #region Admin init

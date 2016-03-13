@@ -13,6 +13,68 @@ namespace Clinic.Api.Controllers
 
         ApplicationDbContext db = new ApplicationDbContext();
 
+        /*
+        // Получить визит по ID
+        // GET: api/Visit/5
+        [Authorize(Roles = "Doctor, Client")]
+        public IHttpActionResult Get(int visitId)
+        {
+
+            var visit = db.Visits.Where(v => v.Id == visitId).Select(r => new
+            {
+                Id = r.Id,
+                Description = r.Description,
+                Confiration = r.Сonfirmation,
+                ProcedureId = r.Procedure.Id,
+                ProcedureCost = r.Procedure.Cost,
+                ProcedureTime = r.Procedure.Time,
+                DoctorId = r.Doctor.Id,
+                ClientId = r.Client.Id
+            });
+
+            // если не найден визит 
+            if(visit == null)
+            {
+                return BadRequest("Visit not found!");
+            }
+            else
+            {
+                return Ok(visit);
+            }
+            
+        }
+
+        // Получить визит по ID
+        // GET: api/Visit
+        [AllowAnonymous]
+        public IHttpActionResult Get()
+        {
+
+            var visit = db.Visits.Select(r => new
+            {
+                Id = r.Id,
+                Description = r.Description,
+                Confiration = r.Сonfirmation,
+                ProcedureId = r.Procedure.Id,
+                ProcedureCost = r.Procedure.Cost,
+                ProcedureTime = r.Procedure.Time,
+                DoctorId = r.Doctor.Id,
+                ClientId = r.Client.Id
+            });
+
+            // если не найден визит 
+            if (visit == null)
+            {
+                return BadRequest("Visit not found!");
+            }
+            else
+            {
+                return Ok(visit);
+            }
+
+        }
+
+        /*
         // Получить визит по ID
         // GET: api/Visit/5
         [Authorize(Roles = "Doctor, Client")]
@@ -32,7 +94,7 @@ namespace Clinic.Api.Controllers
             });
 
             // если не найден визит 
-            if(visit == null)
+            if (visit == null)
             {
                 return BadRequest("Visit not found!");
             }
@@ -40,8 +102,8 @@ namespace Clinic.Api.Controllers
             {
                 return Ok(visit);
             }
-            
-        }
 
+        }
+        */
     }
 }

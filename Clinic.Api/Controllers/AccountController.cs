@@ -200,8 +200,8 @@ namespace Clinic.Api.Controllers
                     {
                         UserManager.AddToRole(user.Id, "Doctor");
 
-                        // должны заполнить визиты для доктора нулевыми значениями и связать их с датой и временем
-                        FillVisits(user.Id);
+                       // // должны заполнить визиты для доктора нулевыми значениями и связать их с датой и временем
+                       // FillVisits(user.Id);
                     }
                     else
                     {
@@ -213,7 +213,7 @@ namespace Clinic.Api.Controllers
 
             return Ok();
         }
-
+        /*
         // Заполняем нулевыми значениями визиты на все время для нового доктора
         private void FillVisits(string doctorId)
         {
@@ -250,7 +250,7 @@ namespace Clinic.Api.Controllers
             }
 
         }
-
+        */
 
         // POST api/Account/Logout
         [Route("Logout")]

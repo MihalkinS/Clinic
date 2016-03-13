@@ -13,12 +13,13 @@ namespace Clinic.Api.Models.AppModels
         public string Breed { get; set; }
         public string Color { get; set; }
 
-        public ICollection<Visit> Visits { get; set; }
+        /*public ICollection<Visit> Visits { get; set; }
 
         public Client()
         {
             Visits = new List<Visit>();
         }
+        */
     }
 
 }

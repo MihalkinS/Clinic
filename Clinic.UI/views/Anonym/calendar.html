@@ -1,1 +1,209 @@
-﻿
+﻿<div class="container">
+
+    <!--
+        Заголовок по центру сраницы
+     -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-12 col-centered">
+                <h2 id="buttons">Запись на прием к ветеринару</h2>
+            </div>
+        </div>
+    </div>
+
+    <!--///////////////////////////////////////////////////-->
+    <!--
+     Информация о враче и цитата
+    -->
+    <div class="row margin-top-25px">
+        <div class="col-lg-4">
+            <div class="row  middleHeader">
+                <div class="col-lg-10">
+                    <strong>Врач</strong>
+                </div>
+                <div class="col-lg-2">
+                    <div class="row">
+                        <a ng-click="prevDoctor()" class="btn btn-info btn-xs">&laquo;</a>
+                        <a ng-click="nextDoctor()" class="btn btn-info btn-xs">&raquo;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row margin-top-17">
+                <div class="col-lg-2">
+                    <img class="img-circle avatar" src="{{currDoctorAccount.AvatarURL}}" />
+                </div>
+                <div class="col-lg-9 col-lg-offset-1">
+                    <ul class="breadcrumb">
+                        <li class="active">{{currDoctorAccount.LastName}} {{currDoctorAccount.FirstName}} {{currDoctorAccount.MiddleName}}</li>
+                    </ul>
+                    <ul class="breadcrumb">
+                        <li class="active">{{currDoctorAccount.Position}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-lg-offset-4">
+            <blockquote class="blockquote-reverse">
+                <p>Меня не волнует человеческая религия, где не заботятся о благе кошек и собак.</p>
+                <small><cite title="Source Title">Абрахам Линкольн (1809-1865)</cite></small>
+            </blockquote>
+        </div>
+    </div>
+    <!--///////////////////////////////////////////////////-->
+    <!--
+     Прокрутка недели <>
+    -->
+    <div class="row margin-top-25px">
+        <div class="center-block">
+            <div class="col-lg-12">
+                <div class="row">
+                    <!--/////////////////////////////////////////////////////////////-->
+                    <div class="col-lg-4 col-onright">
+                        <button class="btn btn-info" ng-click="currWeekDown(currDoctorAccount.Id, currWeek[0].id)">&laquo; Неделю назад</button>
+                    </div>
+                    <div class="col-lg-4 col-centered">
+                        <h5>
+                            <strong>
+                                Неделя с {{ currWeek[0].day }}.{{ currWeek[0].month }}
+                                по {{ currWeek[6].day }}.{{ currWeek[0].month }} ({{ currWeek[0].year }})
+                            </strong>
+                        </h5>
+                    </div>
+                    <div class="col-lg-4 col-onleft">
+                        <button class="btn btn-info" ng-click="currWeekUp(currDoctorAccount.Id, currWeek[6].id)">Неделю вперед &raquo;</button>
+                    </div>
+                    <!--/////////////////////////////////////////////////////////////-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+            Таблица
+    -->
+    <div class="row">
+        <div class="center-block">
+            <div class="col-lg-12">
+                <!--/////////////////////////////////////////////////////////////-->
+                <div class="row">
+                    <table class="table table-bordered table-hover margin-top-25px">
+                        <thead>
+                            <tr>
+                                <th class="timeColums active"></th>
+                                <th ng-repeat="day in currWeek">
+                                    <p>{{ day.day }}.{{ day.month }}</p>
+                                    <p>{{ day.dayOfWeek }}</p>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="interval in timeInterval track by $index" 
+                                ng-if="interval >= currDoctorAccount.WorkTimeStart && interval <= currDoctorAccount.WorkTimeFinish ">
+                                <td>{{ interval }}</td>
+                                <td ng-if="fisrtDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <span class="linkReservation">
+                                           Свободно
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="fisrtDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="secondDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <span class="linkReservation">
+                                            Свободно
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="secondDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="thirdDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <span class="linkReservation">
+                                            Свободно
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="thirdDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="fourthDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <span class="linkReservation">
+                                            Свободно
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="fourthDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="fifthDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <span class="linkReservation">
+                                            Свободно
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="fifthDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="sixthDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <span class="linkReservation">
+                                            Свободно
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="sixthDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="seventhDayMass[$index * 4] == 'empty'">
+                                    <small>
+                                        <span class="linkReservation">
+                                            Свободно
+                                        </span>
+                                    </small>
+                                </td>
+                                <td ng-if="seventhDayMass[$index * 4] != 'empty'">
+                                    <small>
+                                        <span class="text-danger textBusy">
+                                            Занято
+                                        </span>
+                                    </small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--/////////////////////////////////////////////////////////////-->
+            </div>
+        </div>
+    </div>
+
+</div>
