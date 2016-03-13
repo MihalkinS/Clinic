@@ -53,7 +53,12 @@
 
     $scope.saveDoctor = function (newDoctor, doctorForm) {
         if (doctorForm.$valid) {
-            alert();
+
+            adminService.saveDoctor(newDoctor).then(function (results) {
+                $location.path("/admin/doctors/")
+            }, function (error) {
+                alert(error.data.message);
+            });
         };
     };
 

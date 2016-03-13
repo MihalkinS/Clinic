@@ -107,3 +107,52 @@ td {
 .calendarHeader:hover {
     background-color: #dddddd;
 }
+
+
+
+
+
+
+
+
+
+
+
+.margintop-15px{
+    margin-top:15px;
+    
+}
+
+.vertAlign{
+    vertical-align: middle;
+}
+
+.padding-5px{
+    padding:5px;
+}
+
+.thumbnail{
+    margin-left:15px;
+}
+
+
+
+.pressed {
+    color:#000000;
+    padding: 20px;
+    background: #F8F8FF;
+    border: 1px solid #DCDCDC;
+    border-right: 1px solid #DCDCDC;
+    border-bottom: 1px solid #DCDCDC;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.text {
+    text-align:  center;
+   }
+
+.color{
+    color:#A9A9A9;
+}

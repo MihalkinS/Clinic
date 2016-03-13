@@ -1,0 +1,51 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Список докторов <span class="badge">{{CountOfDoctors}}</span> </h1>
+        </div>
+        <div>
+            <button type="button" ng-click="addDoctor()" class="btn btn-success">Добавить доктора</button>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row" ng-repeat="doctor in doctors">
+        <div class="col-lg-8 col-lg-offset-2">
+            <form class="form-horizontal">
+                <fieldset>
+                    <legend>Учетная запись</legend>
+                    <div class="form-group">
+                        <div class="col-lg-2 col-lg-offset-10">
+                            <button type="button" value="{{doctor.Id}}" ng-click="deleteDoctor(doctor.Id)" class="btn btn-danger">Удалить</button>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ID" class="col-lg-2 control-label">ID</label>
+                            <div class="col-lg-10">
+                                <input value="{{doctor.Id}}" type="text" class="form-control" id="ID" placeholder="ID">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="UserName" class="col-lg-2 control-label">Логин</label>
+                            <div class="col-lg-10">
+                                <input value="{{doctor.UserName}}" type="text" class="form-control" id="UserName" placeholder="Логин">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Email" class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <input value="{{doctor.Email}}" type="text" class="form-control" id="Email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Phone" class="col-lg-2 control-label">Телефон</label>
+                            <div class="col-lg-10">
+                                <input value="{{doctor.PhoneNumber}}" type="text" class="form-control" id="Phone" placeholder="Телефон">
+                            </div>
+                        </div>
+</fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+

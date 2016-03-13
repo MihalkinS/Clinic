@@ -17,7 +17,7 @@ clinicApp
         });
         $routeProvider.when('/doctor/visit/:id',
         {
-            templateUrl: '/views/Doctor/AddVisit.html',
+            templateUrl: '/views/Doctor/addVisit.html',
             controller: 'doctorVisitCtrl'
         });
 
@@ -25,11 +25,6 @@ clinicApp
         $routeProvider.when('/client/calendar/',
         {
             templateUrl: '/views/Client/calendar.html',
-            controller: 'clientCtrl'
-        });
-        $routeProvider.when('/client/comment/',
-        {
-            templateUrl: '/views/Client/comment.html',
             controller: 'clientCtrl'
         });
         $routeProvider.when('/client/visit/:id',
@@ -47,11 +42,6 @@ clinicApp
         $routeProvider.when('/admin/doctor/add/',
         {
             templateUrl: '/views/Admin/addDoctor.html',
-            controller: 'adminCtrl'
-        });
-        $routeProvider.when('/admin/holidays/',
-        {
-            templateUrl: '/views/Admin/holidays.html',
             controller: 'adminCtrl'
         });
         $routeProvider.when('/admin/procedures/',

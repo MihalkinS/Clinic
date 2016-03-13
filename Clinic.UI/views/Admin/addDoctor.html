@@ -1,0 +1,94 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Добавить доктора <span class="badge">{{CountOfDoctors}}</span> </h1>
+        </div>
+    </div>
+</div>
+<div class="container">
+        <div class="col-lg-8 col-lg-offset-2">
+            <form class="form-horizontal" name="doctorForm">
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-2 col-lg-offset-8">
+                            <button type="submit" ng-click="saveDoctor(newDoctor, doctorForm)" class="btn btn-success">Сохранить</button>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="reset" ng-click="redirectToMainPage()" class="btn btn-default">На главную</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="UserName" class="col-lg-3 control-label">Логин</label>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" id="UserName" placeholder="Логин" ng-model="newDoctor.userName" autofocus required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email" class="col-lg-3 control-label">Email</label>
+                        <div class="col-lg-9">
+                            <input type="email" class="form-control" id="Email" placeholder="Email" ng-model="newDoctor.email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Phone" class="col-lg-3 control-label">Телефон</label>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" id="Phone" placeholder="Телефон"  ng-model="newDoctor.phoneNumber" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Password" class="col-lg-3 control-label">Пароль</label>
+                        <div class="col-lg-9">
+                            <input type="password" class="form-control" id="Password" placeholder="Пароль" ng-model="newDoctor.password" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ConfirmPassword" class="col-lg-3 control-label">Повторите пароль</label>
+                        <div class="col-lg-9">
+                            <input type="password" class="form-control" id="ConfirmPassword" placeholder="Повторите пароль" ng-model="newDoctor.confirmPassword" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ConfirmPassword" class="col-lg-5 control-label">Дополонительная информация</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="FirstName" class="col-lg-3 control-label">Фамилия</label>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" id="FirstName" placeholder="Фамилия" ng-model="newDoctor.firstName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="LastName" class="col-lg-3 control-label">Имя</label>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" id="LastName" placeholder="Имя" ng-model="newDoctor.lastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="MiddleName" class="col-lg-3 control-label">Отчество</label>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" id="MiddleName" placeholder="Отчество" ng-model="newDoctor.middleName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Position" class="col-lg-3 control-label">Должность</label>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" id="Position" placeholder="Отчество" ng-model="newDoctor.position" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="WorkTimeStart" class="col-lg-3 control-label">Начало работы</label>
+                        <div class="col-lg-9">
+                            <input type="text" ng-pattern="/\d\d:\d\d:\d\d/" class="form-control" id="WorkTimeStart" placeholder="(08:10:00)" ng-model="newDoctor.workTimeStart" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="WorkTimeFinish" class="col-lg-3 control-label">Конец работы</label>
+                        <div class="col-lg-9">
+                            <input type="text" ng-pattern="/\d\d:\d\d:\d\d/" class="form-control" id="WorkTimeFinish" placeholder="(18:10:00)" ng-model="newDoctor.workTimeFinish" required>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+</div>
+
+

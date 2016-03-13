@@ -3,8 +3,25 @@
 <head>
     <title></title>
 	<meta charset="utf-8" />
+    <!-- Bootstrap core CSS -->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js"></script>
+    <![endif]-->
+
     <link href="content/css/bootstrap.css" rel="stylesheet" />
     <link href="content/css/myStyle.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <style>
+        #map-container {
+            height: 300px;
+            width: 40%;
+        }
+    </style>
 </head>
 <body ng-controller="indexCtrl">
 
@@ -17,13 +34,10 @@
                         <ul class="nav navbar-nav">
                             <li ng-hide="authentication.isAuth"><a href="#/anonym/calendar/">Расписание</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/doctors/">Список докторов</a></li>
-                            <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/holidays/">Время работы докторов</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/procedures/">Типовые процедуры</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/drugs/">Препараты</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/calendar/">Прием</a></li>
-                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/comment/">Оставить отзыв</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/calendar/">Расписание</a></li>
-                            <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/history/">Картотека</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="navbar-text navCursor" ng-show="authentication.isAuth && authentication.userRole == 'Administrator'">

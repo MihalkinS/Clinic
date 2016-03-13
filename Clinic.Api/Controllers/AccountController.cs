@@ -221,6 +221,125 @@ namespace Clinic.Api.Controllers
         // UserName, Email, Password, Comfirm Password, PhoneAddress, Role, Breed, PetName
         // POST api/Account/RegisterClient
         [AllowAnonymous]
+        [Route("RegisterDoctor")]
+        public IHttpActionResult RegisterClient(RegisterDoctorBindingModel model)
+        {
+
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            var user = new ApplicationUser()
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber
+            };
+
+                // получаем ID пользователя, который обратился за добавлением врача
+                var userId = User.Identity.GetUserId();
+
+                if (userId == null)
+                {
+                    return BadRequest("Your ID not found!");
+                }
+
+                // входит ли пользователь в роль администратора
+                var isAdmin = UserManager.IsInRole(userId, "Administrator");
+
+            // если доктора пытается добавить НЕ админ -> ошибка
+            if (isAdmin == null)
+            {
+                return BadRequest("You are not an Administrator!");
+            }
+            // иначе пытаемся добавить доктора в БД
+            else
+            {
+                user.IsDoctor = true;
+                user.EmailConfirmed = true;
+
+                // подтверждение аккаунта для доктора
+                user.Confirmation = true;
+
+                
+
+                IdentityResult result = UserManager.Create(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    UserManager.AddToRole(user.Id, "Doctor");
+
+                    using (ApplicationDbContext db = new ApplicationDbContext())
+                    {
+                        Doctor profile = new Doctor()
+                        {
+                            UserId = user.Id,
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            MiddleName = model.MiddleName,
+                            Position = model.Position,
+                            WorkTimeStart = model.WorkTimeStart,
+                            WorkTimeFinish = model.WorkTimeFinish
+                        };
+                        db.Doctors.Add(profile);
+                        db.SaveChanges();
+                    }
+
+                    // должны заполнить визиты для доктора нулевыми значениями и связать их с датой и временем
+                    FillTimes(user.Id);
+                }
+                else
+                {
+                    return BadRequest(result.ToString());
+                }
+            }
+
+
+            return Ok();
+        }
+
+
+        // Для заполнения 5 недель пустыми значениями времени
+        private void FillTimes(string doctorId)
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                var days = db.Days;
+                var doctor = db.Users.Find(doctorId);
+
+                foreach (var day in days)
+                {
+                    // начальный интервал в дне 00:00:00
+                    TimeSpan hourAndMinutes = TimeSpan.Zero;
+
+                    for (int interval = 0; interval < 24 * 2; interval++)
+                    {
+                        // создаем интервал и привязываем к Day
+                        Time time = new Time()
+                        {
+                            HourAndMinutes = hourAndMinutes,
+                            Day = day,
+                            Doctor = doctor
+                        };
+
+                        // добавляем к БД
+                        db.Times.Add(time);
+
+
+                        // получаем время следующего интервала
+                        hourAndMinutes = hourAndMinutes.Add(TimeSpan.FromMinutes(30));
+                    }     
+                }
+                db.SaveChanges();
+            }
+        }
+
+
+        // Регистрация клиента. В модель передается:
+        // UserName, Email, Password, Comfirm Password, PhoneAddress, Role, Breed, PetName
+        // POST api/Account/RegisterClient
+        [AllowAnonymous]
         [Route("RegisterClient")]
         public IHttpActionResult RegisterClient(RegisterClientBindingModel model)
         {
@@ -402,236 +521,6 @@ namespace Clinic.Api.Controllers
         }
 
 
-
-        /*
-
-        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        [Route("ManageInfo")]
-        public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
-        {
-            IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
-
-            foreach (IdentityUserLogin linkedAccount in user.Logins)
-            {
-                logins.Add(new UserLoginInfoViewModel
-                {
-                    LoginProvider = linkedAccount.LoginProvider,
-                    ProviderKey = linkedAccount.ProviderKey
-                });
-            }
-
-            if (user.PasswordHash != null)
-            {
-                logins.Add(new UserLoginInfoViewModel
-                {
-                    LoginProvider = LocalLoginProvider,
-                    ProviderKey = user.UserName,
-                });
-            }
-
-            return new ManageInfoViewModel
-            {
-                LocalLoginProvider = LocalLoginProvider,
-                Email = user.UserName,
-                Logins = logins,
-                ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
-            };
-        }
-
-                
-        // POST api/Account/AddExternalLogin
-        [Route("AddExternalLogin")]
-        public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-
-            AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
-
-            if (ticket == null || ticket.Identity == null || (ticket.Properties != null
-                && ticket.Properties.ExpiresUtc.HasValue
-                && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
-            {
-                return BadRequest("External login failure.");
-            }
-
-            ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
-
-            if (externalData == null)
-            {
-                return BadRequest("The external login is already associated with an account.");
-            }
-
-            IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
-                new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }
-
-        // GET api/Account/UserInfo
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo()
-        {
-            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
-            return new UserInfoViewModel
-            {
-                Email = User.Identity.GetUserName(),
-                HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
-            };
-        }
-
-        // GET api/Account/ExternalLogin
-        [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
-        [AllowAnonymous]
-        [Route("ExternalLogin", Name = "ExternalLogin")]
-        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
-        {
-            if (error != null)
-            {
-                return Redirect(Url.Content("~/") + "#error=" + Uri.EscapeDataString(error));
-            }
-
-            if (!User.Identity.IsAuthenticated)
-            {
-                return new ChallengeResult(provider, this);
-            }
-
-            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
-            if (externalLogin == null)
-            {
-                return InternalServerError();
-            }
-
-            if (externalLogin.LoginProvider != provider)
-            {
-                Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                return new ChallengeResult(provider, this);
-            }
-
-            ApplicationUser user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
-                externalLogin.ProviderKey));
-
-            bool hasRegistered = user != null;
-
-            if (hasRegistered)
-            {
-                Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
-                ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    CookieAuthenticationDefaults.AuthenticationType);
-
-                AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
-                Authentication.SignIn(properties, oAuthIdentity, cookieIdentity);
-            }
-            else
-            {
-                IEnumerable<Claim> claims = externalLogin.GetClaims();
-                ClaimsIdentity identity = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
-                Authentication.SignIn(identity);
-            }
-
-            return Ok();
-        }
-
-        // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
-        [AllowAnonymous]
-        [Route("ExternalLogins")]
-        public IEnumerable<ExternalLoginViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
-        {
-            IEnumerable<AuthenticationDescription> descriptions = Authentication.GetExternalAuthenticationTypes();
-            List<ExternalLoginViewModel> logins = new List<ExternalLoginViewModel>();
-
-            string state;
-
-            if (generateState)
-            {
-                const int strengthInBits = 256;
-                state = RandomOAuthStateGenerator.Generate(strengthInBits);
-            }
-            else
-            {
-                state = null;
-            }
-
-            foreach (AuthenticationDescription description in descriptions)
-            {
-                ExternalLoginViewModel login = new ExternalLoginViewModel
-                {
-                    Name = description.Caption,
-                    Url = Url.Route("ExternalLogin", new
-                    {
-                        provider = description.AuthenticationType,
-                        response_type = "token",
-                        client_id = Startup.PublicClientId,
-                        redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
-                        state = state
-                    }),
-                    State = state
-                };
-                logins.Add(login);
-            }
-
-            return logins;
-        }
-
-
-        // POST api/Account/RegisterExternal
-        [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("RegisterExternal")]
-        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var info = await Authentication.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return InternalServerError();
-            }
-
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user);
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            result = await UserManager.AddLoginAsync(user.Id, info.Login);
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result); 
-            }
-            return Ok();
-        }
-
-        */
 
         protected override void Dispose(bool disposing)
         {

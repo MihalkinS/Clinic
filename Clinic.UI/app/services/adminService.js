@@ -187,7 +187,26 @@ clinicApp.factory('adminService', ['$http', '$q', 'localStorageService', functio
         return deferred.promise;
     };
 
+    var _saveDoctor = function (newDoctor) {
 
+        var authData = localStorageService.get('authorizationData');
+
+        var deferred = $q.defer();
+
+        $http.post(serverURL + 'api/account/RegisterDoctor', newDoctor, {
+            headers: {
+                'Authorization': ' Bearer ' + authData.token
+            }
+        })
+        .success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (err, status) {
+                deferred.reject(err);
+            });
+
+        return deferred.promise;
+    };
 
 
     adminServiceFactory.getDoctors = _getDoctors;
@@ -201,6 +220,7 @@ clinicApp.factory('adminService', ['$http', '$q', 'localStorageService', functio
     adminServiceFactory.getProcedures = _getProcedures;
     adminServiceFactory.procedures = _procedures;
     adminServiceFactory.saveProcedure = _saveProcedure;
+    adminServiceFactory.saveDoctor = _saveDoctor;
     adminServiceFactory.deleteProcedure = _deleteProcedure;
 
 
