@@ -7,50 +7,84 @@
 </div>
     <div class="container">
         <div class="row" ng-show="viewForm == true">
-            <div class="col-lg-6 col-lg-offset-3">
+            <div class="col-lg-8 col-lg-offset-2">
                 <form class="form-horizontal" name="signUpForm">
                     <fieldset>
                         <div class="form-group">
-                            <label for="email" class="col-lg-3 control-label">Email</label>
-                            <div class="col-lg-7">
-                                <input type="email" ng-model="loginData.email" class="form-control" id="email" placeholder="Ваш Email" autofocus>
+                            <div class="col-lg-2 col-lg-offset-8">
+                                <button type="submit" ng-click="register(loginData, signUpForm)" class="btn btn-success">Сохранить</button>
+                            </div>
+                            <div class="col-lg-2">
+                                <button type="reset" ng-click="redirectToMainPage()" class="btn btn-default">На главную</button>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="userName" class="col-lg-3 control-label">Логин</label>
-                            <div class="col-lg-7">
-                                <input type="text" ng-model="loginData.userName" class="form-control" id="userName" placeholder="Логин">
+                            <label for="UserName" class="col-lg-3 control-label">Логин</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="UserName" placeholder="Логин" ng-model="loginData.userName" autofocus required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="phoneNumber" class="col-lg-3 control-label">Номер телефона</label>
-                            <div class="col-lg-7">
-                                <input type="text" ng-model="loginData.phoneNumber" class="form-control" id="phoneNumber" placeholder="Номер телефона">
+                            <label for="Email" class="col-lg-3 control-label">Email</label>
+                            <div class="col-lg-9">
+                                <input type="email" class="form-control" id="Email" placeholder="Email" ng-model="loginData.email" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="col-lg-3 control-label">Пароль</label>
-                            <div class="col-lg-7">
-                                <input type="password" ng-model="loginData.password" class="form-control" id="password" placeholder="Пароль">
+                            <label for="Phone" class="col-lg-3 control-label">Телефон</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="Phone" placeholder="Телефон" ng-model="loginData.phoneNumber" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="confirmPassword" class="col-lg-3 control-label">Повторите пароль</label>
-                            <div class="col-lg-7">
-                                <input type="password" ng-model="loginData.confirmPassword" class="form-control" id="confirmPassword" placeholder="Повторите пароль">
+                            <label for="Password" class="col-lg-3 control-label">Пароль</label>
+                            <div class="col-lg-9">
+                                <input type="password" class="form-control" id="Password" placeholder="Пароль" ng-model="loginData.password" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-lg-8 col-lg-offset-2">
-                                <button type="reset" class="btn btn-default" ng-click="redirectToMainPage()">На главную</button>
-                                <button type="submit" ng-click="register(signUpForm, loginData)" class="btn btn-primary">Регистрация</button>
+                            <label for="ConfirmPassword" class="col-lg-3 control-label">Повторите пароль</label>
+                            <div class="col-lg-9">
+                                <input type="password" class="form-control" id="ConfirmPassword" placeholder="Повторите пароль" ng-model="loginData.confirmPassword" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-lg-12 text-center">
-                                <div class="text-danger" ng-show="errorMessage != ''">
-                                    {{ errorMessage }}
-                                </div>
+                            <label class="col-lg-5 control-label">Дополонительная информация</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName" class="col-lg-3 control-label">Фамилия</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="FirstName" placeholder="Фамилия" ng-model="loginData.lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="LastName" class="col-lg-3 control-label">Имя</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="LastName" placeholder="Имя" ng-model="loginData.firstName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="MiddleName" class="col-lg-3 control-label">Отчество</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="MiddleName" placeholder="Отчество" ng-model="loginData.middleName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="PetName" class="col-lg-3 control-label">Кличка питомца</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="PetName" placeholder="Кличка питомца" ng-model="loginData.petName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Breed" class="col-lg-3 control-label">Порода питомца</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="Breed" placeholder="Порода питомца" ng-model="loginData.breed" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Color" class="col-lg-3 control-label">Окрас питомца</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="Color" placeholder="Окрас питомца" ng-model="loginData.color" required>
                             </div>
                         </div>
                     </fieldset>

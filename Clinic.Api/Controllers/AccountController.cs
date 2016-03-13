@@ -21,6 +21,7 @@ using Clinic.Api.Models.Context;
 using Clinic.Api.Models.AppModels;
 using System.Net;
 using System.Text;
+using Clinic.Api.Models.ViewModels;
 
 namespace Clinic.Api.Controllers
 {
@@ -213,6 +214,77 @@ namespace Clinic.Api.Controllers
 
             return Ok();
         }
+
+
+
+        // Регистрация клиента. В модель передается:
+        // UserName, Email, Password, Comfirm Password, PhoneAddress, Role, Breed, PetName
+        // POST api/Account/RegisterClient
+        [AllowAnonymous]
+        [Route("RegisterClient")]
+        public IHttpActionResult RegisterClient(RegisterClientBindingModel model)
+        {
+
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            var user = new ApplicationUser()
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+
+            };
+
+                user.IsClient = true;
+                IdentityResult result = UserManager.Create(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    Client profile = new Client()
+                    {
+                        Breed = model.Breed,
+                        Color = model.Color,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        MiddleName = model.MiddleName,
+                        PetName = model.PetName,
+                        UserId = user.Id
+                    };
+
+                    db.Clients.Add(profile);
+                    db.SaveChanges();
+
+                }
+
+                UserManager.AddToRole(user.Id, "Client");
+                // генерируем код для подтверждения email
+                var code = UserManager.GenerateEmailConfirmationToken(user.Id);
+                // отправляет сообщение клиенту о подтверждении регистрации со ссылкой на метод Account Controll
+                UserManager.SendEmail(user.Id, "Подтверждение Email", "Для завершения регистрации : <a href=\"http://localhost:49845/api/account/ConfirmEmail?userId=" + user.Id + "&code=" + code + "\">Завершить</a>");
+            }
+            else
+            {
+                StringBuilder message = new StringBuilder();
+                foreach (var erorr in result.Errors)
+                {
+                    message.AppendLine(erorr);
+                }
+                return Content(HttpStatusCode.BadRequest, message.ToString());
+            }
+
+
+            return Ok();
+        }
+
+
+
+
+
         /*
         // Заполняем нулевыми значениями визиты на все время для нового доктора
         private void FillVisits(string doctorId)

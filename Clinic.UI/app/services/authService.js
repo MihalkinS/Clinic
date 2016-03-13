@@ -40,7 +40,24 @@ clinicApp.factory('authService', ['$http', '$q', 'localStorageService', function
         _logOut();
         var deferred = $q.defer();
 
-        $http.post(serverURL + 'api/account/register', registration)
+        $http.post(serverURL + 'api/account/registerClient', registration)
+        .success(function (response) {
+            deferred.resolve(response);
+        })
+            .error(function (err, status) {
+                deferred.reject(err);
+            });
+
+        return deferred.promise;
+
+    };
+
+    var _saveClientRegistration = function (registration) {
+
+        _logOut();
+        var deferred = $q.defer();
+
+        $http.post(serverURL + 'api/account/registerClient', registration)
         .success(function (response) {
             deferred.resolve(response);
         })
@@ -92,6 +109,7 @@ clinicApp.factory('authService', ['$http', '$q', 'localStorageService', function
 
     authServiceFactory.login = _login;
     authServiceFactory.saveRegistration = _saveRegistration;
+    authServiceFactory.saveClientRegistration = _saveClientRegistration;
     authServiceFactory.fillAuthData = _fillAuthData;
     authServiceFactory.authentication = _authentication;
     authServiceFactory.logOut = _logOut;

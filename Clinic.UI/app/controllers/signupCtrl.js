@@ -15,16 +15,22 @@ clinicApp.controller('signupCtrl', ['$scope', '$location', 'authService', functi
         phoneNumber:"",
         password: "",
         confirmPassword: "",
-        role: "Client"
-
+        role: "Client",
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        petName: "",
+        color: "",
+        breed: ""
     };
 
     $scope.redirectToMainPage = function () {
         $location.path("/");
     };
 
-    $scope.register = function (signUpForm, loginData) {
-        if (signUpForm.$valid) {
+    $scope.register = function (loginData, signUpForm) {
+            
+        console.log(loginData);
 
             if (loginData.password !== loginData.confirmPassword) {
                 $scope.errorMessage = 'Пароли не совпадают!';
@@ -32,7 +38,7 @@ clinicApp.controller('signupCtrl', ['$scope', '$location', 'authService', functi
             };
             
             
-            authService.saveRegistration(loginData).then(function (response) {
+            authService.saveClientRegistration(loginData).then(function (response) {
 
                 $scope.errorMessage = '';
                 $scope.viewForm = false;
@@ -43,10 +49,6 @@ clinicApp.controller('signupCtrl', ['$scope', '$location', 'authService', functi
                 $scope.errorMessage = err.error_description;
             });
 
-           
-
-            
-        };
     };
 
 
