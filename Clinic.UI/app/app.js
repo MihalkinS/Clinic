@@ -26,7 +26,11 @@ clinicApp
             templateUrl: '/views/Client/comment.html',
             controller: 'clientCtrl'
         });
-
+        $routeProvider.when('/client/visit/:id',
+        {
+            templateUrl: '/views/Client/AddVisit.html',
+            controller: 'clientVisitCtrl'
+        });
 
 
         $routeProvider.when('/admin/doctors/',

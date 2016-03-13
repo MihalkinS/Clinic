@@ -1,170 +1,395 @@
-﻿clinicApp.controller('clientCtrl', function ($scope) {
+﻿clinicApp.controller('clientCtrl', ['$scope', '$location', 'authService', 'clientService', function ($scope, $location, authService, clientService) {
 
-
-    $scope.currWeek = {
-        year: 2016,
-        weekid: 60,
-        weekDays: [
-            '22.02',
-            '23.02',
-            '24.02',
-            '25.02',
-            '26.02',
-            '27.02',
-            '28.02'
-        ]
-
+    if (!authService.authentication.isAuth || authService.authentication.userRole != "Client") {
+        $location.path("/");
     };
+    
+    $scope.doctors = {};
 
+    $scope.currDoctorAccount = {};
 
-    $scope.doctor = {
-        avatar: '../content/img/avatars/Твердорукова.jpg',
-        name: 'Твердорукова Галина Александровна',
-        position: 'Главный специалист'
-    };
+    $scope.currWeek = {};
 
-    $scope.currDoctor = true;
+    $scope.currWeekTimes = {};
 
-    $scope.otherDoctor = function () {
-        if ($scope.currDoctor === true) {
-            $scope.currDoctor = false;
-            $scope.doctor = {
-                avatar: '../content/img/avatars/Белохалатов.jpg',
-                name: 'Белохалатов Антон Иванович',
-                position: 'Главный ветеринар'
-            };
-        }
-        else {
-            $scope.currDoctor = true;
-            $scope.doctor = {
-                avatar: '../content/img/avatars/Твердорукова.jpg',
-                name: 'Твердорукова Галина Александровна',
-                position: 'Главный специалист'
-            };
-        };
+    $scope.currDoctor = 1;
+
+    $scope.timeInterval = [];
+    $scope.fisrtDayMass = [];
+    $scope.secondDayMass = [];
+    $scope.thirdDayMass = [];
+    $scope.fourthDayMass = [];
+    $scope.fifthDayMass = [];
+    $scope.sixthDayMass = [];
+    $scope.seventhDayMass = [];
+
+    $scope.cleanArrays = function () {
+        $scope.timeInterval = [];
+        $scope.fisrtDayMass = [];
+        $scope.secondDayMass = [];
+        $scope.thirdDayMass = [];
+        $scope.fourthDayMass = [];
+        $scope.fifthDayMass = [];
+        $scope.sixthDayMass = [];
+        $scope.seventhDayMass = [];
     }
 
 
-    $scope.week = [
-        'Понедельник',
-        'Вторник',
-        'Среда',
-        'Четверг',
-        'Пятница',
-        'Суббота',
-        'Воскресенье'
-    ];
 
-    $scope.allTimeOfDay = [
-        {
-            hour: '7',
-            minutes: '00'
-        },
-        {
-            hour: '7',
-            minutes: '15'
-        },
-        {
-            hour: '7',
-            minutes: '30'
-        },
-        {
-            hour: '7',
-            minutes: '45'
-        },
-        {
-            hour: '8',
-            minutes: '00'
-        },
-        {
-            hour: '8',
-            minutes: '15'
+    clientService.GetDoctors().then(function (results) {
+
+        $scope.doctors = results;
+        $scope.currDoctorAccount = results[0];
+
+        console.log($scope.currDoctorAccount);
+
+        clientService.GetCurrWeek($scope.currDoctorAccount.Id).then(function (results) {
+
+            $scope.currWeek = results;
+
+            clientService.GetCurrWeekTimes($scope.currDoctorAccount.Id).then(function (results) {
+
+                $scope.currWeekTimes = results;
+
+                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                };
+
+                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                        $scope.timeInterval.push($scope.currWeekTimes[i].HM);
+
+                    };
+                };
+
+                $scope.timeInterval.sort();
+
+
+            }, function (error) {
+
+                alert(error.data.message);
+
+            });
+
+        }, function (error) {
+
+            alert(error.data.message);
+
+        });
+
+
+
+    }, function (error) {
+
+        alert(error.data.message);
+
+    });
+
+
+    $scope.reloadData = function (id) {
+        clientService.GetCurrWeek(id).then(function (results) {
+            $scope.currWeek = results;
+
+            clientService.GetCurrWeekTimes(id).then(function (results) {
+
+                $scope.cleanArrays();
+                $scope.currWeekTimes = results;
+
+                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                };
+
+                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                        $scope.timeInterval.push($scope.currWeekTimes[i].HM);
+
+                    };
+                };
+
+                $scope.timeInterval.sort();
+
+            }, function (error) {
+
+                alert(error.data.message);
+
+            });
+
+        }, function (error) {
+
+            alert(error.data.message);
+
+        });
+    }
+
+    $scope.nextDoctor = function () {
+        if ($scope.doctors.length > $scope.currDoctor) {
+            $scope.currDoctor = $scope.currDoctor + 1;
+            $scope.currDoctorAccount = $scope.doctors[$scope.currDoctor - 1];
+
+            $scope.reloadData($scope.currDoctorAccount.Id);
+
         }
-    ];
+        else {
+            $scope.currDoctor = 1;
+            $scope.currDoctorAccount = $scope.doctors[$scope.currDoctor - 1];
 
-    $scope.mondayTime = [
-        'busy',
-        'free',
-        'free',
-        'busy',
-        'free',
-        'busy'
-    ];
+            $scope.reloadData($scope.currDoctorAccount.Id);
+        }
+    }
 
-    $scope.tuesdayTime = [
-        'busy',
-        'free',
-        'free',
-        'free',
-        'free',
-        'free'
-    ];
+    $scope.prevDoctor = function () {
+        if ($scope.currDoctor > 1) {
+            $scope.currDoctor = $scope.currDoctor - 1;
+            $scope.currDoctorAccount = $scope.doctors[$scope.currDoctor - 1];
+        }
+        else {
+            $scope.currDoctor = $scope.doctors.length;
+            $scope.currDoctorAccount = $scope.doctors[$scope.currDoctor - 1];
+        }
+    }
 
-    $scope.wednesdayTime = [
-        'busy',
-        'free',
-        'free',
-        'busy',
-        'free',
-        'free'
-    ];
 
-    $scope.thursdayTime = [
-        'busy',
-        'busy',
-        'free',
-        'free',
-        'free',
-        'free'
-    ];
+    $scope.currWeekDown = function (id, dayId) {
 
-    $scope.fridayTime = [
-        'free',
-        'busy',
-        'free',
-        'free',
-        'free',
-        'busy'
-    ];
+        clientService.GetPrevWeek(id, dayId).then(function (results) {
 
-    $scope.saturdayTime = [
-        'busy',
-        'free',
-        'free',
-        'free',
-        'free',
-        'free'
-    ];
+            $scope.currWeek = results;
 
-    $scope.sundayTime = [
-        'busy',
-        'free',
-        'free',
-        'free',
-        'free',
-        'free'
-    ];
+            clientService.GetPrevWeekTimes(id, dayId).then(function (results) {
 
-    $scope.currWeek1 = {
-        year: 2016,
-        weekid: 60,
-        monday: '22.02',
-        tuesday: '23.02',
-        wednesday: '24.02',
-        thursday: '25.02',
-        friday: '26.02',
-        saturday: '27.02',
-        sunday: '28.02'
+                $scope.cleanArrays();
+                $scope.currWeekTimes = results;
+
+                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
+                        $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
+                    };
+                };
+
+                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                        $scope.timeInterval.push($scope.currWeekTimes[i].HM);
+
+                    };
+                };
+
+            }, function (error) {
+
+                alert(error.data.message);
+
+            });
+
+        }, function (error) {
+
+            alert(error.data.message);
+
+        });
+
     };
 
-    $scope.weekEn = [
-        'monday',
-        'tuesday',
-        'wednesday',
-        'thursday',
-        'friday',
-        'saturday',
-        'sunday'
-    ];
+    $scope.currWeekUp = function (id, dayId) {
 
-});
+        clientService.GetNextWeek(id, dayId).then(function (results) {
+
+            if (results != null) {
+
+                $scope.currWeek = results;
+
+                clientService.GetNextWeekTimes(id, dayId).then(function (results) {
+
+                    $scope.cleanArrays();
+                    $scope.currWeekTimes = results;
+
+                    console.log($scope.currWeekTimes);
+
+                    for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
+                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
+                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
+                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
+                        };
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
+                            $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
+                            $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
+                            $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
+                            $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
+                        };
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
+                            $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
+                            $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
+                            $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
+                            $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
+                        };
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
+                            $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
+                            $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
+                            $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
+                            $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
+                        };
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
+                            $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
+                            $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
+                            $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
+                            $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
+                        };
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
+                            $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
+                            $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
+                            $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
+                            $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
+                        };
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
+                            $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
+                            $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
+                            $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
+                            $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
+                        };
+                    };
+
+                    for (var i = 0; i < $scope.currWeekTimes.length; i++) {
+                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
+                            $scope.timeInterval.push($scope.currWeekTimes[i].HM);
+
+                        };
+                    };
+
+                }, function (error) {
+
+                    alert(error.data.message);
+
+                });
+
+            }
+
+
+        }, function (error) {
+
+            alert(error.data.message);
+
+        });
+
+    };
+
+}]);

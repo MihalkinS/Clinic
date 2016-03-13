@@ -9,7 +9,7 @@ clinicApp.factory('authService', ['$http', '$q', 'localStorageService', function
         isAuth: false,
         userName: '',
         userRole: 'anonym',
-        confirmed: false
+        id: ''
     };
 
     var _logOut = function () {
@@ -19,7 +19,7 @@ clinicApp.factory('authService', ['$http', '$q', 'localStorageService', function
         _authentication.isAuth = false;
         _authentication.userName = "";
         _authentication.userRole = 'anonym';
-        _authentication.confirmed = false;
+        _authentication.id = '';
 
     };
 
@@ -30,7 +30,7 @@ clinicApp.factory('authService', ['$http', '$q', 'localStorageService', function
             _authentication.isAuth = true;
             _authentication.userName = authData.userName;
             _authentication.userRole = authData.role;
-            _authentication.confirmed = authData.confirmation;
+            _authentication.id = authData.id;
         }
 
     };
@@ -66,12 +66,16 @@ clinicApp.factory('authService', ['$http', '$q', 'localStorageService', function
         })
             .success(function (response) {
 
-                localStorageService.set('authorizationData', { token: response.access_token, userName: response.userName, role: response.role });
+                localStorageService.set('authorizationData', { token: response.access_token, userName: response.userName, role: response.role, id: response.id });
 
             _authentication.isAuth = true;
             _authentication.userName = response.userName;
             _authentication.userRole = response.role;
-            _authentication.confirmed = response.confirmation;
+            _authentication.id = response.id;
+
+            console.log('------');
+            console.log(response);
+            console.log('------');
 
             deferred.resolve(response);
 

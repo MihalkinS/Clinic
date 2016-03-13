@@ -1,5 +1,5 @@
 ﻿'use strict';
-clinicApp.controller('indexCtrl', ['$scope', '$location', 'authService', 'adminService', 'anonymService', function ($scope, $location, authService, adminService, anonymService) {
+clinicApp.controller('indexCtrl', ['$scope', '$location', 'authService', 'adminService', 'anonymService', 'clientService', function ($scope, $location, authService, adminService, anonymService, clientService) {
 
     $scope.SignOut = function () {
         authService.logOut();

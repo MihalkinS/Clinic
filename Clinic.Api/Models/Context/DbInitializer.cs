@@ -23,11 +23,54 @@ namespace Clinic.Api.Models.Context
 
             //   TestHistory(context);
 
-            // TestProcedures(context);
+            TestProcedures(context);
 
             TestDoctors(context);
 
+            TestClient(context);
+
             base.Seed(context);
+        }
+
+        private void TestClient(ApplicationDbContext context)
+        {
+            var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
+
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+            var client = new ApplicationUser()
+            {
+                Email = "client@HeathyPet.com",
+                UserName = "cl",
+                PhoneNumber = "5580808",
+                Confirmation = true,
+                EmailConfirmed = true
+            };
+
+            var result1 = userManager.Create(client, "Qwerty_6");
+            if (result1.Succeeded)
+            {
+                userManager.AddToRole(client.Id, ROLES.CLIENT);
+            }
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                Client profile = new Client()
+                {
+                    UserId = client.Id,
+                    Address = "Колоса 76",
+                    FirstName = "Антон",
+                    LastName = "Твердоруков",
+                    MiddleName = "Александрович",
+                    Color = "черный",
+                    Breed = "Хаски",
+                    PetName = "Nick"
+                };
+
+                db.Clients.Add(profile);
+                db.SaveChanges();
+            }
+            
+
         }
 
         private void TestProcedures(ApplicationDbContext context)

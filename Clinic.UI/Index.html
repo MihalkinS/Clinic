@@ -20,9 +20,8 @@
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/holidays/">Время работы докторов</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/procedures/">Типовые процедуры</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/drugs/">Препараты</a></li>
-                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client' && authentication.confirm"><a href="#/client/calendar/">Прием</a></li>
-                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client' && !authentication.confirm"><a href="#/anonym/calendar/">Расписание</a></li>
-                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client' && authentication.confirm"><a href="#/client/comment/">Оставить отзыв</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/calendar/">Прием</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/comment/">Оставить отзыв</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/calendar/">Расписание</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/history/">Картотека</a></li>
                         </ul>
@@ -68,6 +67,7 @@
     <script src="app/services/authService.js"></script>
     <script src="app/services/adminService.js"></script>
     <script src="app/services/anonymService.js"></script>
+    <script src="app/services/clientService.js"></script>
     <script src="app/controllers/signinCtrl.js"></script>
     <script src="app/controllers/signupCtrl.js"></script>
     <script src="app/controllers/clientCtrl.js"></script>
@@ -75,5 +75,6 @@
     <script src="app/controllers/anonymCtrl.js"></script>
     <script src="app/controllers/doctorCtrl.js"></script>
     <script src="app/controllers/drugStorageCtrl.js"></script>
+    <script src="app/controllers/clientVisit.js"></script>
 </body>
 </html>

@@ -55,7 +55,7 @@ namespace Clinic.Api.Providers
            IList<string> roleManager = await userManager.GetRolesAsync(user.Id);
 
 
-            AuthenticationProperties properties = CreateProperties(user.UserName, roleManager);
+            AuthenticationProperties properties = CreateProperties(user.UserName, roleManager, user.Id);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -112,11 +112,12 @@ namespace Clinic.Api.Providers
         ////////////////////////////////////////////////
         //EDITED
         /////////////////////////////////////////////////
-        public static AuthenticationProperties CreateProperties(string userName, IList<string> userRoles)
+        public static AuthenticationProperties CreateProperties(string userName, IList<string> userRoles, string id)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userName", userName }
+                { "userName", userName },
+                { "id", id }
             };
             foreach (var role in userRoles)
             {

@@ -1,5 +1,6 @@
 ﻿using Clinic.Api.Models.AppModels;
 using Clinic.Api.Models.Context;
+using Clinic.Api.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -319,6 +320,31 @@ namespace Clinic.Api.Controllers
 
 
 
+        }
+
+        // Получаем интервал времени 
+        // GET: api/Day/Time?timeId=735
+        [AllowAnonymous]
+        [Route("Time")]
+        public IHttpActionResult GetTime(int timeId)
+        {
+
+            var time = db.Times.FirstOrDefault(x => x.Id == timeId);
+            var doctor = db.Doctors.FirstOrDefault(x => x.UserId == time.DoctorId);
+            if (time == null)
+            {
+                return BadRequest("Time not found!");
+            }
+            else
+            {
+                return Ok(new TimeViewModel()
+                {
+                    Id = time.Id,
+                    DoctorId = time.DoctorId,
+                    DoctorName = string.Concat(doctor.LastName, " ", doctor.FirstName, " ", doctor.MiddleName),
+                    DayId = time.DayId
+                });
+            }          
         }
 
 
