@@ -58,40 +58,7 @@ namespace Clinic.Api.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-        /*
-
-                [Authorize(Roles ="Client")]
-                [Route("client")]
-                public string Test()
-                {
-
-                    var id = User.Identity.GetUserId();
-
-                    using (var context = new ApplicationDbContext())
-                    {
-                        context.Clients.Add(new Models.AppModels.Client()
-                        {
-                            UserId = id,
-                            Address = "Florida",
-                            FirstName = "Kutrapali",
-                            LastName = "Ramsesh",
-                            MiddleName = "Bang"
-                        });
-                        context.SaveChanges();
-                    }
-
-                        return "testClient success";
-                }
-
-                [Authorize(Roles = "Administrator")]
-                [Route("administrator")]
-                public string TestAdmin()
-                {
-                    return "testAdministrator success";
-                }
-        */
-
-
+        
         // Подтверждение Email
         [Route("ConfirmEmail")]
         public IHttpActionResult GetConfirmEmail(string userId = "", string code = "")

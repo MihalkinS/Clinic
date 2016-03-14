@@ -143,10 +143,10 @@ clinicApp.factory('clientService', ['$http', '$q', 'localStorageService', functi
 
         var deferred = $q.defer();
 
-        $http.get(serverURL + 'api/visit/' + id, {
-            headers: {
-                'Authorization': ' Bearer ' + authData.token
-            }
+        $http({
+            method: 'GET',
+            url: serverURL + 'api/visit/' + id,      
+            headers: { 'Authorization': ' Bearer ' + authData.token }
         })
             .success(function (response) {
                 deferred.resolve(response);
@@ -218,6 +218,31 @@ clinicApp.factory('clientService', ['$http', '$q', 'localStorageService', functi
         return deferred.promise;
     };
 
+    var _getVisits = function () {
+
+        var authData = localStorageService.get('authorizationData');
+
+        var deferred = $q.defer();
+
+        $http.get(serverURL + 'api/visit/ClientVisits', {
+            headers: {
+                'Authorization': ' Bearer ' + authData.token,
+                'Content-type': ' application/json'
+            }
+        })
+            .success(function (response) {
+                deferred.resolve(response);
+            })
+            .error(function (err, status) {
+                deferred.reject(err);
+            });
+
+        return deferred.promise;
+
+    }
+
+
+
     clientServiceFactory.GetDoctors = _getDoctors;
     clientServiceFactory.GetDoctorById = _getDoctorById;
     clientServiceFactory.GetCurrWeek = _getCurrWeek;
@@ -233,6 +258,8 @@ clinicApp.factory('clientService', ['$http', '$q', 'localStorageService', functi
     clientServiceFactory.getDoctorById = _getDoctorById;
     clientServiceFactory.getProcedures = _getProcedures;
     clientServiceFactory.saveVisit = _saveVisit;
+    clientServiceFactory.getVisits = _getVisits;
+
 
     return clientServiceFactory;
 

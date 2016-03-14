@@ -1,24 +1,29 @@
-﻿.col-centered {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+﻿#map-container {
+    height: 300px;
+    width: 40%;
+}
+
+.col-centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .col-onright {
-  display: block;
-  margin-right: 0;
-  text-align: right;
+    display: block;
+    margin-right: 0;
+    text-align: right;
 }
 
 .col-onleft {
-  display: block;
-  margin-left: 0;
-  text-align: left;
+    display: block;
+    margin-left: 0;
+    text-align: left;
 }
 
-.colore{
-    background-color:brown;
+.colore {
+    background-color: brown;
 }
 
 th {
@@ -47,7 +52,6 @@ td {
 }
 
 .linkConfirm {
-
     background-color: white;
     color: #f69c55;
     padding: 3px;
@@ -62,13 +66,13 @@ td {
     cursor: default;
 }
 
-.textBusy:hover {
-    background-color: #e4b9b9;
-    color: white;
-    padding: 3px;
-    border-radius: 1px;
-    cursor: default;
-}
+    .textBusy:hover {
+        background-color: #e4b9b9;
+        color: white;
+        padding: 3px;
+        border-radius: 1px;
+        cursor: default;
+    }
 
 .avatar {
     width: 70px;
@@ -81,7 +85,7 @@ td {
     border-bottom: 1px solid #dddddd;
 }
 
-.margin-top-17{
+.margin-top-17 {
     margin-top: 17px;
 }
 
@@ -104,41 +108,40 @@ td {
     padding: 5px;
 }
 
-.calendarHeader:hover {
-    background-color: #dddddd;
+    .calendarHeader:hover {
+        background-color: #dddddd;
+    }
+
+
+
+
+
+
+
+
+
+
+
+.margintop-15px {
+    margin-top: 15px;
 }
 
-
-
-
-
-
-
-
-
-
-
-.margintop-15px{
-    margin-top:15px;
-    
-}
-
-.vertAlign{
+.vertAlign {
     vertical-align: middle;
 }
 
-.padding-5px{
-    padding:5px;
+.padding-5px {
+    padding: 5px;
 }
 
-.thumbnail{
-    margin-left:15px;
+.thumbnail {
+    margin-left: 15px;
 }
 
 
 
 .pressed {
-    color:#000000;
+    color: #000000;
     padding: 20px;
     background: #F8F8FF;
     border: 1px solid #DCDCDC;
@@ -150,9 +153,9 @@ td {
 }
 
 .text {
-    text-align:  center;
-   }
+    text-align: center;
+}
 
-.color{
-    color:#A9A9A9;
+.color {
+    color: #A9A9A9;
 }

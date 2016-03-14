@@ -1,9 +1,12 @@
-﻿clinicApp.controller('clientCtrl', ['$scope', '$location', 'authService', 'clientService', function ($scope, $location, authService, clientService) {
+﻿clinicApp.controller('clientCtrl', ['$scope', '$location', 'authService', 'clientService', 'dryService', function ($scope, $location, authService, clientService, dryService) {
 
     if (!authService.authentication.isAuth || authService.authentication.userRole != "Client") {
         $location.path("/");
     };
     
+
+    $scope.DRYcurrWeekTimes = [];
+
     $scope.doctors = {};
 
     $scope.currDoctorAccount = {};
@@ -13,6 +16,10 @@
     $scope.currWeekTimes = {};
 
     $scope.currDoctor = 1;
+
+    $scope.visits = {};
+
+    $scope.visitsCostSum = 0;
 
     $scope.timeInterval = [];
     $scope.fisrtDayMass = [];
@@ -51,50 +58,13 @@
 
                 $scope.currWeekTimes = results;
 
-                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                };
+                $scope.fisrtDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[0].id);
+                $scope.secondDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[1].id);
+                $scope.thirdDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[2].id);
+                $scope.fourthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[3].id);
+                $scope.fifthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[4].id);
+                $scope.sixthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[5].id);
+                $scope.seventhDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[6].id);
 
                 for (var i = 0; i < $scope.currWeekTimes.length; i++) {
                     if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
@@ -126,6 +96,23 @@
 
     });
 
+    clientService.getVisits().then(function (results) {
+
+        console.log(results);
+        console.log(results);
+
+        $scope.visits = results;
+
+        var sum = 0;
+
+        for (var visit in $scope.visits) {
+            sum = sum + $scope.visits[visit].Cost;
+            console.log(visit);
+        };
+
+        $scope.visitsCostSum = sum;
+
+    });
 
     $scope.reloadData = function (id) {
         clientService.GetCurrWeek(id).then(function (results) {
@@ -136,50 +123,13 @@
                 $scope.cleanArrays();
                 $scope.currWeekTimes = results;
 
-                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                };
+                $scope.fisrtDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[0].id);
+                $scope.secondDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[1].id);
+                $scope.thirdDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[2].id);
+                $scope.fourthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[3].id);
+                $scope.fifthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[4].id);
+                $scope.sixthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[5].id);
+                $scope.seventhDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[6].id);
 
                 for (var i = 0; i < $scope.currWeekTimes.length; i++) {
                     if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
@@ -242,50 +192,15 @@
                 $scope.cleanArrays();
                 $scope.currWeekTimes = results;
 
-                for (var i = 0; i < $scope.currWeekTimes.length; i++) {
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                    if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
-                        $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
-                    };
-                };
+                $scope.fisrtDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[0].id);
+                $scope.secondDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[1].id);
+                $scope.thirdDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[2].id);
+                $scope.fourthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[3].id);
+                $scope.fifthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[4].id);
+                $scope.sixthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[5].id);
+                $scope.seventhDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[6].id);
+               
+
 
                 for (var i = 0; i < $scope.currWeekTimes.length; i++) {
                     if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
@@ -321,52 +236,13 @@
                     $scope.cleanArrays();
                     $scope.currWeekTimes = results;
 
-                    console.log($scope.currWeekTimes);
-
-                    for (var i = 0; i < $scope.currWeekTimes.length; i++) {
-                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {
-                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].ClientId);
-                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].DayId);
-                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].TimeId);
-                            $scope.fisrtDayMass.push($scope.currWeekTimes[i].VisitId);
-                        };
-                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[1].id) {
-                            $scope.secondDayMass.push($scope.currWeekTimes[i].ClientId);
-                            $scope.secondDayMass.push($scope.currWeekTimes[i].DayId);
-                            $scope.secondDayMass.push($scope.currWeekTimes[i].TimeId);
-                            $scope.secondDayMass.push($scope.currWeekTimes[i].VisitId);
-                        };
-                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[2].id) {
-                            $scope.thirdDayMass.push($scope.currWeekTimes[i].ClientId);
-                            $scope.thirdDayMass.push($scope.currWeekTimes[i].DayId);
-                            $scope.thirdDayMass.push($scope.currWeekTimes[i].TimeId);
-                            $scope.thirdDayMass.push($scope.currWeekTimes[i].VisitId);
-                        };
-                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[3].id) {
-                            $scope.fourthDayMass.push($scope.currWeekTimes[i].ClientId);
-                            $scope.fourthDayMass.push($scope.currWeekTimes[i].DayId);
-                            $scope.fourthDayMass.push($scope.currWeekTimes[i].TimeId);
-                            $scope.fourthDayMass.push($scope.currWeekTimes[i].VisitId);
-                        };
-                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[4].id) {
-                            $scope.fifthDayMass.push($scope.currWeekTimes[i].ClientId);
-                            $scope.fifthDayMass.push($scope.currWeekTimes[i].DayId);
-                            $scope.fifthDayMass.push($scope.currWeekTimes[i].TimeId);
-                            $scope.fifthDayMass.push($scope.currWeekTimes[i].VisitId);
-                        };
-                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[5].id) {
-                            $scope.sixthDayMass.push($scope.currWeekTimes[i].ClientId);
-                            $scope.sixthDayMass.push($scope.currWeekTimes[i].DayId);
-                            $scope.sixthDayMass.push($scope.currWeekTimes[i].TimeId);
-                            $scope.sixthDayMass.push($scope.currWeekTimes[i].VisitId);
-                        };
-                        if ($scope.currWeekTimes[i].DayId == $scope.currWeek[6].id) {
-                            $scope.seventhDayMass.push($scope.currWeekTimes[i].ClientId);
-                            $scope.seventhDayMass.push($scope.currWeekTimes[i].DayId);
-                            $scope.seventhDayMass.push($scope.currWeekTimes[i].TimeId);
-                            $scope.seventhDayMass.push($scope.currWeekTimes[i].VisitId);
-                        };
-                    };
+                    $scope.fisrtDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[0].id);
+                    $scope.secondDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[1].id);
+                    $scope.thirdDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[2].id);
+                    $scope.fourthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[3].id);
+                    $scope.fifthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[4].id);
+                    $scope.sixthDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[5].id);
+                    $scope.seventhDayMass = dryService.timeIntervalForADay($scope.currWeekTimes, $scope.currWeek[6].id);
 
                     for (var i = 0; i < $scope.currWeekTimes.length; i++) {
                         if ($scope.currWeekTimes[i].DayId == $scope.currWeek[0].id) {

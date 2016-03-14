@@ -26,9 +26,6 @@ namespace Clinic.Api
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-            // Enable cors
-            config.EnableCors();
-
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

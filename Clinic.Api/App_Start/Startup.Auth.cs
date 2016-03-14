@@ -12,7 +12,6 @@ using Clinic.Api.Providers;
 using Clinic.Api.Models;
 using Clinic.Api.Models.Context;
 
-
 namespace Clinic.Api
 {
     public partial class Startup
@@ -49,6 +48,7 @@ namespace Clinic.Api
 
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
+
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(

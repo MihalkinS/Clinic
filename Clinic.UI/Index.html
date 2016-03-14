@@ -15,13 +15,7 @@
     <link href="content/css/bootstrap.css" rel="stylesheet" />
     <link href="content/css/myStyle.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-
-    <style>
-        #map-container {
-            height: 300px;
-            width: 40%;
-        }
-    </style>
+    <script src="app/lib/bootstrap.min.js"></script>
 </head>
 <body ng-controller="indexCtrl">
 
@@ -37,6 +31,7 @@
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/procedures/">Типовые процедуры</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/drugs/">Препараты</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/calendar/">Прием</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/visits/">Мои визиты</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/calendar/">Расписание</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
@@ -83,6 +78,7 @@
     <script src="app/services/anonymService.js"></script>
     <script src="app/services/clientService.js"></script>
     <script src="app/services/doctorService.js"></script>
+    <script src="app/services/dryService.js"></script>
     <script src="app/controllers/signinCtrl.js"></script>
     <script src="app/controllers/signupCtrl.js"></script>
     <script src="app/controllers/clientCtrl.js"></script>

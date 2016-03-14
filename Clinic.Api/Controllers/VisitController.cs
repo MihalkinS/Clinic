@@ -1,6 +1,7 @@
 ﻿using Clinic.Api.Models.AppModels;
 using Clinic.Api.Models.Context;
 using Clinic.Api.Models.ViewModels;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,9 +9,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Clinic.Api.Controllers
 {
+    [RoutePrefix("api/visit")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class VisitController : ApiController
     {
 
@@ -38,6 +42,56 @@ namespace Clinic.Api.Controllers
         }
 
 
+        // Получаем визиты для клиента
+        // GET: api/Visit
+        [Route("ClientVisits1")]
+        [Authorize(Roles = "Doctor, Client")]
+        public HttpResponseMessage GetClientVisits1()
+        {
+            var userId = db.Users.FirstOrDefault(x => x.UserName == User.Identity.Name).Id;
+
+            if (userId == null) return Request.CreateResponse(HttpStatusCode.BadRequest, "You are not user =) !");
+
+            else
+            {
+                return Request.CreateResponse<IEnumerable<Visit>>(HttpStatusCode.OK, db.Visits.Where(x => x.ClientId == userId));
+            }
+            
+        }
+
+        // Получаем визиты для клиента
+        // GET: api/Visit
+        [Route("ClientVisits")]
+        [Authorize(Roles = "Doctor, Client")]
+        public IHttpActionResult GetClientVisits()
+        {
+            var userId = db.Users.FirstOrDefault(x => x.UserName == User.Identity.Name).Id;
+            if (userId == null) return BadRequest("You are not user =) !");
+
+            var visits = db.Visits.Where(x => x.ClientId == userId).Select(r => new
+            {
+                DoctorName = db.Doctors.FirstOrDefault(d => d.UserId == r.DoctorId).LastName + " " +
+                             db.Doctors.FirstOrDefault(d => d.UserId == r.DoctorId).FirstName + " " +
+                             db.Doctors.FirstOrDefault(d => d.UserId == r.DoctorId).MiddleName,
+                // linq не хотел сериализировать DateTime и ToShortDateString
+                Day = ( r.Times.FirstOrDefault(x => x != null).Day.Date.Day > 10 ?
+                        r.Times.FirstOrDefault(x => x != null).Day.Date.Day.ToString() :
+                        "0" + r.Times.FirstOrDefault(x => x != null).Day.Date.Day.ToString() ) + "." +
+                      ( r.Times.FirstOrDefault(x => x != null).Day.Date.Month > 10 ? 
+                        r.Times.FirstOrDefault(x => x != null).Day.Date.Month.ToString() : 
+                        "0" +  r.Times.FirstOrDefault(x => x != null).Day.Date.Month.ToString() ) + "." +
+                        r.Times.FirstOrDefault(x => x != null).Day.Date.Year.ToString(),
+                Procedure = r.Procedure.Name,
+                Cost = r.Procedure.Cost,
+                ProcedureTime = r.Procedure.Time,
+                Description = r.Description,
+                Conformation = r.Сonfirmation,
+                VisitTime = r.Times.FirstOrDefault(x => x != null).HourAndMinutes
+            });
+
+            return Ok(visits);
+
+        }
 
         // Записать визит
         // Post: api/Visit
