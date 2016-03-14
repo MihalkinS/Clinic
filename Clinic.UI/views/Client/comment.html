@@ -1,0 +1,51 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="row">
+                <div class="col-lg-1">
+                    <button class="btn btn-lg btn-primary" ng-click="prevDoctor()">&laquo;</button>
+                </div>
+                <div class="col-lg-7">
+                    <div class="col-lg-2">
+                        <img class="img-circle avatar" src="{{currDoctorAccount.AvatarURL}}" />
+                    </div>
+                    <div class="col-lg-9 col-lg-offset-1">
+                        <ul class="breadcrumb">
+                            <li class="active">{{currDoctorAccount.LastName}} {{currDoctorAccount.FirstName}} {{currDoctorAccount.MiddleName}}</li>
+                        </ul>
+                        <ul class="breadcrumb">
+                            <li class="active">{{currDoctorAccount.Position}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-lg btn-primary" ng-click="nextDoctor()">&raquo;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="form-horizontal" name="commentForm">
+                <div class="form-group center-block">
+                    <fieldset>
+                        <legend>Добавить коментарий</legend>
+                        <div class="col-lg-9">
+                            <textarea class="form-control" rows="3" id="text" required ng-model="text"></textarea>
+                            <span class="help-block">Мы будем рады любому отзыву о нашей работе</span>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="submit" ng-click="postComment(text)" class="btn btn-success">Добавить</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div ng-repeat="comment in comments | orderBy: '-DateNonVisible'">
+                <blockquote>
+                    <p>{{comment.Text}}</p>
+                    <small>{{comment.AuthorName}} <cite>{{comment.DateVisible}}</cite></small>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</div>

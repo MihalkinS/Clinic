@@ -1,4 +1,10 @@
-﻿#map-container {
+﻿.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+#map-container {
     height: 300px;
     width: 40%;
 }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Clinic.Api.Models.Context
 {
-    public class DbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
+    public class DbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
     {
 
         protected override void Seed(ApplicationDbContext context)

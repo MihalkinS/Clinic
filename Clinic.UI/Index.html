@@ -32,6 +32,7 @@
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Administrator'"><a href="#/admin/drugs/">Препараты</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/calendar/">Прием</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/visits/">Мои визиты</a></li>
+                            <li ng-show="authentication.isAuth && authentication.userRole == 'Client'"><a href="#/client/comment/">Оставить отзыв о враче</a></li>
                             <li ng-show="authentication.isAuth && authentication.userRole == 'Doctor'"><a href="#/doctor/calendar/">Расписание</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
@@ -77,6 +78,7 @@
     <script src="app/services/adminService.js"></script>
     <script src="app/services/anonymService.js"></script>
     <script src="app/services/clientService.js"></script>
+    <script src="app/services/commentService.js"></script>
     <script src="app/services/doctorService.js"></script>
     <script src="app/services/dryService.js"></script>
     <script src="app/controllers/signinCtrl.js"></script>
@@ -86,7 +88,8 @@
     <script src="app/controllers/anonymCtrl.js"></script>
     <script src="app/controllers/doctorCtrl.js"></script>
     <script src="app/controllers/drugStorageCtrl.js"></script>
-    <script src="app/controllers/clientVisit.js"></script>
-    <script src="app/controllers/doctorVisit.js"></script>
+    <script src="app/controllers/clientVisitCtrl.js"></script>
+    <script src="app/controllers/doctorVisitCtrl.js"></script>
+    <script src="app/controllers/commentCtrl.js"></script>
 </body>
 </html>

@@ -10,18 +10,31 @@ using System.Web.Http;
 
 namespace Clinic.Api.Controllers
 {
-
+    [RoutePrefix("api/coment")]
     public class CommentController : ApiController
     {
 
         ApplicationDbContext db = new ApplicationDbContext();
 
+        // GET: api/Comment?doctorId=
         [AllowAnonymous]
-        // GET: api/Comment/5
         public IHttpActionResult Get(string doctorId)
         {
-            return Ok(db.Comments.Where(c => c.UserId == doctorId).Select(d => d.Text).ToList());
+            var doctor = db.Doctors.FirstOrDefault(x => x.UserId == doctorId);
+
+            return Ok(db.Comments.Where(c => c.UserId == doctorId).Select(d => new
+            {
+                Text = d.Text,
+                DateVisible = ( d.Date.Day > 10 ? (d.Date.Day.ToString()) : ("0" + d.Date.Day.ToString()) )+ "." +
+                       ( d.Date.Month > 10 ? (d.Date.Month.ToString()) : ("0" + d.Date.Month.ToString()) ) + "." +
+                       d.Date.Year.ToString(),
+                DateNonVisible = d.Date,
+                DoctorName = doctor.LastName + " " + doctor.FirstName + " " + doctor.MiddleName,
+                DoctorAvatarURL = doctor.AvatarURL,
+                Position = doctor.Position
+            }).ToList());
         }
+
 
         // POST: api/Comment
         [Authorize(Roles = "Client")]
@@ -49,7 +62,7 @@ namespace Clinic.Api.Controllers
                 Comment comment = new Comment()
                 {
                     User = user,
-                    Data = DateTime.Now,
+                    Date = DateTime.Now,
                     Text = commentRequest.Text
                 };
 
