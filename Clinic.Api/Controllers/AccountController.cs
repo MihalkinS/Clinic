@@ -105,8 +105,6 @@ namespace Clinic.Api.Controllers
                 PhoneNumber = model.PhoneNumber
             };
 
-            // ;
-
             // если мы добавляем клиента
             if (model.Role.CompareTo("Client") == 0)
             {
@@ -184,12 +182,12 @@ namespace Clinic.Api.Controllers
 
 
 
-        // Регистрация клиента. В модель передается:
-        // UserName, Email, Password, Comfirm Password, PhoneAddress, Role, Breed, PetName
+        // Регистрация доктора. В модель передается:
+        // UserName, Email, Password, Comfirm Password, PhoneAddress, Role, Position, WorkTime
         // POST api/Account/RegisterClient
         [AllowAnonymous]
         [Route("RegisterDoctor")]
-        public IHttpActionResult RegisterClient(RegisterDoctorBindingModel model)
+        public IHttpActionResult RegisterDoctor(RegisterDoctorBindingModel model)
         {
 
             if (model == null)
@@ -216,7 +214,7 @@ namespace Clinic.Api.Controllers
                 var isAdmin = UserManager.IsInRole(userId, "Administrator");
 
             // если доктора пытается добавить НЕ админ -> ошибка
-            if (isAdmin == null)
+            if (isAdmin == false)
             {
                 return BadRequest("You are not an Administrator!");
             }
@@ -251,10 +249,10 @@ namespace Clinic.Api.Controllers
                         };
                         db.Doctors.Add(profile);
                         db.SaveChanges();
-                    }
 
-                    // должны заполнить визиты для доктора нулевыми значениями и связать их с датой и временем
-                    FillTimes(user.Id);
+                        // должны заполнить визиты для доктора нулевыми значениями и связать их с датой и временем
+                        DBHelper.FillTimesForDoctor(db, user.Id);
+                    }                  
                 }
                 else
                 {
@@ -264,42 +262,6 @@ namespace Clinic.Api.Controllers
 
 
             return Ok();
-        }
-
-
-        // Для заполнения 5 недель пустыми значениями времени
-        private void FillTimes(string doctorId)
-        {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                var days = db.Days;
-                var doctor = db.Users.Find(doctorId);
-
-                foreach (var day in days)
-                {
-                    // начальный интервал в дне 00:00:00
-                    TimeSpan hourAndMinutes = TimeSpan.Zero;
-
-                    for (int interval = 0; interval < 24 * 2; interval++)
-                    {
-                        // создаем интервал и привязываем к Day
-                        Time time = new Time()
-                        {
-                            HourAndMinutes = hourAndMinutes,
-                            Day = day,
-                            Doctor = doctor
-                        };
-
-                        // добавляем к БД
-                        db.Times.Add(time);
-
-
-                        // получаем время следующего интервала
-                        hourAndMinutes = hourAndMinutes.Add(TimeSpan.FromMinutes(30));
-                    }     
-                }
-                db.SaveChanges();
-            }
         }
 
 

@@ -27,6 +27,6 @@ namespace Clinic.Api.Models.AppModels
         */
 
         public int DayId { get; set; }
-        public Day Day { get; set; }
+        public virtual Day Day { get; set; }
     }
 }

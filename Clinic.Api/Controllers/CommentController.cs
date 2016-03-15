@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace Clinic.Api.Controllers
 {
-    [RoutePrefix("api/coment")]
+    [RoutePrefix("api/comment")]
     public class CommentController : ApiController
     {
 
