@@ -18,11 +18,6 @@ clinicApp.factory('anonymService', ['$http', '$q', 'localStorageService', functi
         $http.get(serverURL + 'api/Doctor')
             .success(function (response) {
                 
-                _doctors = response;
-                currDoctorId = response[0].Id;
-                _getCurrWeekTimes(response[0].Id).then(function (results) {
-                    _currWeekTimes = results;
-                });
                 deferred.resolve(response);
 
             })

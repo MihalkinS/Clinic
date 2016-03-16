@@ -52,7 +52,7 @@ namespace Clinic.Api.Models.Context
         public ApplicationDbContext()
             : base("VetConnection", throwIfV1Schema: false)
         {
-            //Database.Initialize(true);
+
         }
 
 
@@ -76,6 +76,6 @@ namespace Clinic.Api.Models.Context
             return new ApplicationDbContext();
         }
 
-    //    public System.Data.Entity.DbSet<Clinic.Api.Models.Context.ApplicationUser> ApplicationUsers { get; set; }
+    
     }
 }

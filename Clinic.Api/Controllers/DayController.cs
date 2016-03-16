@@ -78,7 +78,7 @@ namespace Clinic.Api.Controllers
             DateTime dateLast = dateFirst.Date.AddDays(6);
 
             // выбираем время, у которого день входит в интервал [начальный день, начальный день + 6]
-            var days = db.Days.Where(d => d.Date >= dateFirst.Date && d.Date <= dateLast.Date).Select(d => new
+            var days = db.Days.Where(d => d.Date >= dateFirst && d.Date <= dateLast).Select(d => new
             {
                 dayOfWeek = d.DayOfWeek,
                 day = d.Date.Day,
@@ -123,7 +123,7 @@ namespace Clinic.Api.Controllers
             DateTime dateFirst = dateLast.Date.AddDays(-6);
 
             // выбираем время, у которого день входит в интервал 
-            var days = db.Days.Where(d => d.Date >= dateFirst.Date && d.Date <= dateLast.Date).Select(d => new
+            var days = db.Days.Where(d => d.Date >= dateFirst && d.Date <= dateLast).Select(d => new
             {
                 dayOfWeek = d.DayOfWeek,
                 day = d.Date.Day,
@@ -155,7 +155,6 @@ namespace Clinic.Api.Controllers
             var roleDoctorId = db.Roles.SingleOrDefault(r => r.Name == "Doctor").Id;
             var isDoctor = user.Roles.First(r => r.RoleId == roleDoctorId);
 
-            var rt = db.Times.Find(1);
 
             // нету доктора в БД для которого нужно получить интервалы времени
             if (isDoctor == null)

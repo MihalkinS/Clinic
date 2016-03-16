@@ -41,6 +41,17 @@ namespace Clinic.Api.Providers
                 return;
             }
 
+            if (userManager.IsInRole(user.Id, DBHelper.Roles.Administrator))
+            {
+                // вставляем проверку на заполненость дней в БД
+                // каждый раз, когда Администратор будет обращаться за токеном, 
+                // будет происходить проверка на заполненость БД днями на некоторое время вперед
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    DBHelper.CheckNumberOfDays(db);
+                }
+            }
+
             if (user == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
@@ -56,6 +67,9 @@ namespace Clinic.Api.Providers
 
 
             AuthenticationProperties properties = CreateProperties(user.UserName, roleManager, user.Id);
+
+         
+
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -112,6 +126,7 @@ namespace Clinic.Api.Providers
         ////////////////////////////////////////////////
         //EDITED
         /////////////////////////////////////////////////
+        // вместе с bearer токеном будет возвращаться имя, роли, в которые входит пользователь и ID
         public static AuthenticationProperties CreateProperties(string userName, IList<string> userRoles, string id)
         {
             IDictionary<string, string> data = new Dictionary<string, string>

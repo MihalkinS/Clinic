@@ -12,22 +12,24 @@ namespace Clinic.Api.Models
 {
     static class DBHelper
     {
+        // количество недель и интервалов для начального заполнения
         static DBHelper()
         {
             INTERVALINHOUR = 2;
             WEEKCOUNT = 2;
             ALLINTERVALINDAY = 24 * INTERVALINHOUR;
             INATERVALDURATION = 60 / INTERVALINHOUR;
+            FUTUREDAYS = 21;
         }
 
-        static class Roles
+        public static class Roles
         {
             public static readonly string Administrator = "Administrator";
             public static readonly string Client = "Client";
             public static readonly string Doctor = "Doctor";
         }
 
-        static class Admin
+        public static class Admin
         {
             public static readonly string UserName = "Admin";
             public static readonly string Email = "admin@HealthyPet.com";
@@ -35,13 +37,15 @@ namespace Clinic.Api.Models
         }
 
         // 24 часа * (2 интервала по 30 минут) = 48 раз по 30 минут
-        static readonly int ALLINTERVALINDAY;
+        public static readonly int ALLINTERVALINDAY;
         // количество интервалов в 1 час
-        static readonly int INTERVALINHOUR;
+        public static readonly int INTERVALINHOUR;
         // время одного интервала
-        static readonly int INATERVALDURATION;
+        public static readonly int INATERVALDURATION;
         // количество начальных недель
-        static readonly int WEEKCOUNT;
+        public static readonly int WEEKCOUNT;
+        // необходимое количество НЕПРОШЕДШИХ дней, которые должны в БД
+        public static readonly int FUTUREDAYS;
 
         public static void TestClient(ApplicationDbContext context)
         {
@@ -201,11 +205,9 @@ namespace Clinic.Api.Models
             var daysID = context.Days.Select(x => x.Id).ToList();
             var doctor = context.Users.Find(doctorId);
 
-            //List<Time> timesList = new List<Time>();
-
             foreach (var dayID in daysID)
             {
-                var day = context.Days.SingleOrDefault(x => x.Id == dayID);
+
                 // начальный интервал в дне 00:00:00
                 TimeSpan hourAndMinutes = TimeSpan.Zero;
 
@@ -228,27 +230,13 @@ namespace Clinic.Api.Models
                     context.Entry(context.Days.SingleOrDefault(x => x.Id == dayID)).State = EntityState.Modified;
                     context.SaveChanges();
 
-                    //timesList.Add(time);
-
                     // получаем время следующего интервала
                     hourAndMinutes = hourAndMinutes.Add(TimeSpan.FromMinutes(30));
                 }
                 
             }
-          //  context.SaveChanges();
 
         }
-        /*
-        foreach (var time in timesList)
-        {
-            var day = context.Days.FirstOrDefault(x => x.Id == time.DayId);
-            context.Days.Attach(day);
-            day.Times.Add(time);
-            context.Entry(day).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-       */
-
 
         // Для заполнения 2 недели пустыми значениями времени
         public static void FillStartDays(ApplicationDbContext context)
@@ -271,6 +259,104 @@ namespace Clinic.Api.Models
             }
         }
 
+        // проверка количества дней, которые хранятся в БД:
+        // как только остается меньше 3х недель вперед -- заполняем
+        public static void CheckNumberOfDays(ApplicationDbContext context)
+        {
+            // количество оставшихся дней
+            var ResidueDayCount = context.Days.Where(d => d.Date >= DateTime.Now).Count();
+
+            if( ResidueDayCount >= FUTUREDAYS )
+            {
+                return;
+            }
+            // если в БД осталось менее 21 дня
+            else
+            {
+                // заполняем недостающее количество дней + 7 с запасом
+                FillAdditionalDays(context, FUTUREDAYS - ResidueDayCount);
+                return;
+            }
+        }
+
+        // Для заполнения недостающего количества НЕПРОШЕДШИХ дней в БД
+        public static void FillAdditionalDays(ApplicationDbContext context, int CountAdditionalDays)
+        {
+            // получаем конечный день в БД
+            DateTime lastDay = context.Days.Max(x => x.Date);
+
+            // выбираем день, который идет за последним
+            DateTime satrtDayForFill = lastDay.AddDays(1);
+
+            // получаем роль доктора
+            var doctorRoleId = context.Roles.FirstOrDefault(x => x.Name == Roles.Doctor).Id;
+
+            List<int> massOfDaysId = new List<int>();
+
+            // заполняем недостающее количество дней
+            for (int i = 0; i < CountAdditionalDays; i++)
+            {
+                // создаем день
+                Day day = new Day() { Date = satrtDayForFill, DayOfWeek = satrtDayForFill.DayOfWeek.ToString() };
+
+                // помещаем день в БД
+                context.Days.Add(day);
+                context.SaveChanges();
+
+                massOfDaysId.Add(day.Id);
+
+                // смещаем крайний день
+                satrtDayForFill = satrtDayForFill.AddDays(1);
+            }
+
+            // получаем ID докторов
+            var doctors = context.Users.Where(x => x.Roles.Any(r => r.RoleId == doctorRoleId)).Select(s => s.Id).ToList();
+
+            // заполняем каждый день для отдельного доктора
+            foreach (var doctorId in doctors)
+            {
+                FillAdditionalTimeIntervals(context, massOfDaysId, doctorId);
+            }
+        }
+
+        // Для заполнения недостающего количества интервалов в НЕПРОШЕДШИХ днях
+        public static void FillAdditionalTimeIntervals(ApplicationDbContext context, List<int> massOfDaysId, string doctorId)
+        {
+
+            var doctor = context.Users.Find(doctorId);
+
+            foreach (var dayID in massOfDaysId)
+            {
+
+                // начальный интервал в дне 00:00:00
+                TimeSpan hourAndMinutes = TimeSpan.Zero;
+
+                for (int interval = 0; interval < DBHelper.ALLINTERVALINDAY; interval++)
+                {
+
+                    // создаем интервал и привязываем к Day
+                    Time time = new Time()
+                    {
+                        HourAndMinutes = hourAndMinutes,
+                        Day = context.Days.SingleOrDefault(x => x.Id == dayID),
+                        Doctor = doctor
+                    };
+
+                    context.Times.Add(time);
+                    context.SaveChanges();
+
+                    context.Days.Attach(context.Days.SingleOrDefault(x => x.Id == dayID));
+                    context.Days.SingleOrDefault(x => x.Id == dayID).Times.Add(time);
+                    context.Entry(context.Days.SingleOrDefault(x => x.Id == dayID)).State = EntityState.Modified;
+                    context.SaveChanges();
+
+                    // получаем время следующего интервала
+                    hourAndMinutes = hourAndMinutes.Add(TimeSpan.FromMinutes(30));
+                }
+
+            }
+
+        }
 
         #region Admin init
         public static void SetRoles(ApplicationDbContext context)
